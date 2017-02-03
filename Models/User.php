@@ -8,26 +8,9 @@
 
 namespace Database\Models;
 
+require_once('../Core/Model.php');
 
-use Database\Connection\DB;
-
-class User extends DB
+class User extends Model
 {
-
-    private $data = [];
-    public function find($id){
-        return parent::select('users',null,"ID=$id");
-    }
-    public function _set(){
-        //TODO: IMPLEMENT MAGIC METHOD SETTING OF PROPERTIES
-    }
-
-    public function _get(){
-        //TODO: IMPLEMENT MAGIC METHOD GETTING OF PROPERTIES
-    }
-
-    public function save(){
-        //TODO: COMMIT THE USER DATA INTO THE DATABASE (UPDATE IF EXISTS)
-    }
-
+    protected $table = 'users';
 }

@@ -13,10 +13,10 @@ use PDOException;
 
 class DB
 {
-    public static const DB_HOST = "eu-cdbr-azure-west-d.cloudapp.net";
-    public static const DB_USER = "b920831ca30deb";
-    public static const DB_PASS = "f8813d50";
-    public static const DB_NAME = "acsm_297da127cca3bea";
+    const DB_HOST = "eu-cdbr-azure-west-d.cloudapp.net";
+    const DB_USER = "b920831ca30deb";
+    const DB_PASS = "f8813d50";
+    const DB_NAME = "acsm_297da127cca3bea";
 
     private static $instance = null;
     private $connection = null;
@@ -48,7 +48,9 @@ class DB
             return $this->exec($sql);
         }
     }
-    public function select($table, $columns = null, $where = "1=1"){
+
+    protected function select($table, $columns = null, $where = "1=1")
+    {
         $cols = $columns ?? "*";
         if(is_array($columns)){
             $cols = implode(",", $columns);
@@ -59,7 +61,7 @@ class DB
 
     }
 
-    public function insert($table, $data)
+    protected function insert($table, $data)
     {
         $dataString = implode("','", array_values($data));
         $colString = implode("','", array_keys($data));
@@ -68,28 +70,31 @@ class DB
         return $this->exec($statement);
     }
 
-    public function update($table, $id, $data)
+    protected function update($table, $id, $data)
     {
         $updateString = implode(",",$this->zipArray($data));
-        $statement = "UPDATE TABLE $table SET $updateString WHERE `ID`=$id";
+        $statement = "UPDATE TABLE $table SET $updateString WHERE `id`=$id";
         print $statement;
         return $this->exec($statement);
     }
 
-    public function delete($table, $id){
-        $statement = "DELETE FROM $table WHERE `ID` = $id";
+    protected function delete($table, $id)
+    {
+        $statement = "DELETE FROM $table WHERE `id` = $id";
         print $statement;
         return $this->exec($statement);
     }
 
     private function exec($statement)
     {
-        $affected = $this->connection->exec($statement);
+        $db = $this->getInstance();
+        $affected = $db->connection->exec($statement);
         return $affected;
     }
     private function query($query)
     {
-        $result = $this->connection->query($query);
+        $db = $this->getInstance();
+        $result = $db->connection->query($query);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         return $result->fetchAll();
     }
