@@ -36,22 +36,39 @@ class Model extends DB
         }
     }
 
+    public function findByColumn($column, $value)
+    {
+        $result = ($this->where(null, "$column=$value"));
+        if ($result == null) return null;
+        if (count($result) == 0) return null;
+        else {
+            return $result;
+        }
+    }
+
     public function save()
     {
-
+        $id = $this->__get('id');
+        $exists = $this->exists();
+        if ($exists == true) {
+            unset($this->data["id"]);
+            parent::update($this->table, $id, $this->data);
+        } else {
+            parent::insert($this->table, $this->data);
+        }
     }
 
     public static function create()
     {
-
     }
 
     public function exists()
     {
         $exists = false;
-        if ($this->id == null) return $exists;
+        $id = $this->__get("id");
+        if ($id == null) return $exists;
         else {
-            $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = $this->id LIMIT 1";
+            $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = $id  LIMIT 1";
             $result = parent::raw($sql);
             $exists = (count($result) > 0);
         }
