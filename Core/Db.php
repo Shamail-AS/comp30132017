@@ -64,8 +64,8 @@ class DB
     protected function insert($table, $data)
     {
         $dataString = implode("','", array_values($data));
-        $colString = implode("','", array_keys($data));
-        $statement = "INSERT INTO $table ('$colString') VALUES ('$dataString')";
+        $colString = implode(" , ", array_keys($data));
+        $statement = "INSERT INTO $table ($colString) VALUES ('$dataString')";
         print $statement;
         return $this->exec($statement);
     }
@@ -73,7 +73,7 @@ class DB
     protected function update($table, $id, $data)
     {
         $updateString = implode(",",$this->zipArray($data));
-        $statement = "UPDATE TABLE $table SET $updateString WHERE `id`=$id";
+        $statement = "UPDATE $table SET $updateString WHERE `id`=$id";
         print $statement;
         return $this->exec($statement);
     }
