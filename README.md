@@ -17,3 +17,14 @@ The Model class extends the DB class, so you don't have to worry about connectin
 ###The Db class
 This class contains all necessary information to connect to the database.
 The class is implemented using the Singleton design pattern.
+
+### SessionManager
+This class handles the session at a very basic level. It also provides
+redirection to forms or other destinations. Session contains an error variable that stores all errors as recorded by
+the Validator
+
+###Validator
+This class handles all form validation for POST data.
+For every form that needs to be validated, a new function can be created that
+defines the errors to catch and the messages for those errors.
+The method returns an error array, which can be used to populate errors in the session

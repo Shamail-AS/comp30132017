@@ -48,27 +48,23 @@ class Model extends DB
 
     public function save()
     {
-        $id = $this->__get('id');
-        $exists = $this->exists();
-        if ($exists == true) {
-            unset($this->data["id"]);
-            parent::update($this->table, $id, $this->data);
+        if (!$this->exists()) {
+            $result = parent::insert($this->table, $this->data);
+            $this->id = $result;
+            return $this;
         } else {
-            parent::insert($this->table, $this->data);
+            $result = parent::update($this->table, $this->id, $this->data);
+            return $this;
         }
-    }
 
-    public static function create()
-    {
     }
 
     public function exists()
     {
         $exists = false;
-        $id = $this->__get("id");
-        if ($id == null) return $exists;
+        if ($this->id == null) return $exists;
         else {
-            $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = $id  LIMIT 1";
+            $sql = "SELECT * FROM $this->table WHERE `$this->primaryKey` = $this->id LIMIT 1";
             $result = parent::raw($sql);
             $exists = (count($result) > 0);
         }
