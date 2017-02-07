@@ -38,11 +38,14 @@ class Model extends DB
 
     public function save()
     {
-
-    }
-
-    public static function create()
-    {
+        if (!$this->exists()) {
+            $result = parent::insert($this->table, $this->data);
+            $this->id = $result;
+            return $this;
+        } else {
+            $result = parent::update($this->table, $this->id, $this->data);
+            return $this;
+        }
 
     }
 
@@ -51,8 +54,9 @@ class Model extends DB
         $exists = false;
         if ($this->id == null) return $exists;
         else {
-            $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = $this->id LIMIT 1";
+            $sql = "SELECT * FROM $this->table WHERE `$this->primaryKey` = $this->id LIMIT 1";
             $result = parent::raw($sql);
+            var_dump($result);
             $exists = (count($result) > 0);
         }
         return $exists;

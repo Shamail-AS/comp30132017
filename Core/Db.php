@@ -26,7 +26,6 @@ class DB
         try {
             $this->connection = new PDO("mysql:host=$host;dbname=$db",$user,$pass);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "OK";
         } catch (PDOException $ex) {
             var_dump($ex->getMessage());
         }
@@ -64,32 +63,33 @@ class DB
     protected function insert($table, $data)
     {
         $dataString = implode("','", array_values($data));
-        $colString = implode("','", array_keys($data));
-        $statement = "INSERT INTO $table ('$colString') VALUES ('$dataString')";
-        print $statement;
+        $colString = implode("`,`", array_keys($data));
+        $statement = "INSERT INTO $table (`$colString`) VALUES ('$dataString')";
+        //print $statement;
         return $this->exec($statement);
     }
+
 
     protected function update($table, $id, $data)
     {
         $updateString = implode(",",$this->zipArray($data));
         $statement = "UPDATE TABLE $table SET $updateString WHERE `id`=$id";
-        print $statement;
+        //print $statement;
         return $this->exec($statement);
     }
 
     protected function delete($table, $id)
     {
         $statement = "DELETE FROM $table WHERE `id` = $id";
-        print $statement;
+        //print $statement;
         return $this->exec($statement);
     }
 
     private function exec($statement)
     {
         $db = $this->getInstance();
-        $affected = $db->connection->exec($statement);
-        return $affected;
+        $db->connection->exec($statement);
+        return $db->connection->lastInsertId();
     }
     private function query($query)
     {
@@ -103,7 +103,7 @@ class DB
     {
         $zipped = [];
         foreach ($array as $key=>$value){
-            array_push($zipped,"$key=$value");
+            array_push($zipped, "`$key`=$value");
         }
         return $zipped;
     }

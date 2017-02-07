@@ -13,4 +13,20 @@ require_once('../Core/Model.php');
 class User extends Model
 {
     protected $table = 'users';
+
+    public function isRegistered()
+    {
+        $result = $this->where('username', "username = '$this->username'");
+        return (count($result) != 0);
+    }
+
+    public function getFriends()
+    {
+
+    }
+
+    public function isFriendsWith($user)
+    {
+
+    }
 }
