@@ -69,7 +69,6 @@ class DB
         return $this->exec($statement);
     }
 
-
     protected function update($table, $id, $data)
     {
         $updateString = implode(",",$this->zipArray($data));

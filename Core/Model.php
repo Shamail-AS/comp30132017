@@ -36,6 +36,16 @@ class Model extends DB
         }
     }
 
+    public function findByColumn($column, $value)
+    {
+        $result = ($this->where(null, "$column=$value"));
+        if ($result == null) return null;
+        if (count($result) == 0) return null;
+        else {
+            return $result;
+        }
+    }
+
     public function save()
     {
         if (!$this->exists()) {
@@ -56,7 +66,6 @@ class Model extends DB
         else {
             $sql = "SELECT * FROM $this->table WHERE `$this->primaryKey` = $this->id LIMIT 1";
             $result = parent::raw($sql);
-            var_dump($result);
             $exists = (count($result) > 0);
         }
         return $exists;
