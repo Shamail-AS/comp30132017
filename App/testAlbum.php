@@ -22,12 +22,12 @@ $album = new Album();
 //var_dump($album->find(1));
 
 $album = new Album();
-$album->__set('user_id', 1);
-$album->__set('privacy_level', 1);
+$album->user_id = 1;
+$album->privacy_level =  1;
 //$album->save();
 
 $album2 = new Album();
-$album2->__set('id', 1);
-$album2->__set('user_id', 1);
-$album2->__set('privacy_level', 2);
+$album2->id = 1;
+$album2->user_id=1;
+$album2->privacy_level = 2;
 $album2->save();

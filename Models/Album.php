@@ -13,8 +13,10 @@ require_once('../Core/Model.php');
 class Album extends Model
 {
     protected $table = 'albums';
-    public $id;
-    public $timestamp;
-    public $user_id;
-    public $privacy_level;
+
+    public function isExisted()
+    {
+        $result = $this->where('name', "name = '$this->name'");
+        return (count($result) != 0);
+    }
 }

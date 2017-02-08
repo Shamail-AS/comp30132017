@@ -13,8 +13,4 @@ require_once('../Core/Model.php');
 class Image extends Model
 {
     protected $table = 'images';
-    public $id;
-    public $user_id;
-    public $album_id;
-    public $url;
 }
