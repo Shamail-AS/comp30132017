@@ -97,7 +97,7 @@ function pr($data)
                 <select class="select-tag" multiple="multiple" style="width:100%">
                     <?php
                     foreach ($tags as $t){
-                        echo "<option value=" . $t['id'] . " selected=\"selected\">" . $t['text'] . "</option>" ;
+                        echo "<option value=" . $t->id . " selected=\"selected\">" . $t->text . "</option>" ;
                     }
                     ?>
                 </select>

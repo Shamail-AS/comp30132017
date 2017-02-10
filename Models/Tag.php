@@ -27,14 +27,14 @@ class Tag extends Model
 
     public function addNewTag($image_id) {
         $this->save();
-        $sql = "SELECT LAST_INSERT_ID() as id";
+        $sql = "SELECT LAST_INSERT_ID() as latest_id";
         $result = parent::raw($sql);
-        $latest_tag = intval($result[0]["id"]);
+        $latest_tag = intval($result[0]->latest_id);
 
         //return var_dump($result);
         $sql2 = "INSERT INTO image_tags (image, tag) VALUES ($image_id, $latest_tag)";
-        $result = parent::raw($sql2);
-        echo ($latest_tag);
+        $result2 = parent::raw($sql2);
+        //echo $latest_tag;
     }
 
     public function getIDbyKey($key) {
