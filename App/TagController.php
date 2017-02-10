@@ -10,14 +10,15 @@ use Database\Models\Tag;
 
 //var_dump($_POST);
 if (isset($_POST) && !empty($_POST)) {
-    if($_POST['action'] = "add") {
+    if($_POST['action'] == "add") {
         $tag = new Tag();
         $tag->key = $_POST['text'];
         $tag->value = $_POST['text'];
         $tag->addNewTag($_POST['image_id']);
     }
-    elseif ($_POST['action'] = "remove") {
-        //TODO
+    elseif ($_POST['action'] == "remove") {
+        $tag = new Tag();
+        $tag->removeTag($_POST['tag_id']);
     }
 }
 ?>

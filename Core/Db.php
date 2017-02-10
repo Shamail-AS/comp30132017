@@ -84,6 +84,12 @@ class DB
         return $this->exec($statement);
     }
 
+    protected function deleteByColumn($table, $column, $value) {
+        $statement = "DELETE FROM $table WHERE `$column` = $value";
+        //print $statement;
+        return $this->exec($statement);
+    }
+
     private function exec($statement)
     {
         $db = $this->getInstance();

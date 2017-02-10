@@ -29,7 +29,7 @@ $image = new Image();
 $i = $image->find($image_id);
 //pr($i->id);
 $tags = $i->getTags();
-pr($tags);
+//pr($tags);
 //pr($i);
 
 $u = new User();
@@ -78,43 +78,43 @@ function pr($data)
         <h6><a href="#">Back To Album</a></h6>
     </div>
     <div>
-            <div class="form-group">
-                <?php
-                    echo "<img src=\"$i->URL\" class=\"img-thumbnail\" width=\"50%\" height=\"50%\">";
-                ?>
-            </div>
-            <div class="form-group">
-                <?php
-                echo "<h5>$i->name</h5>";
-                ?>
-                <?php
-                echo "$i->description";
-                ?>
-            </div>
+        <div class="form-group">
+            <?php
+            echo "<img src=\"$i->URL\" class=\"img-thumbnail\" width=\"50%\" height=\"50%\">";
+            ?>
+        </div>
+        <div class="form-group">
+            <?php
+            echo "<h5>$i->name</h5>";
+            ?>
+            <?php
+            echo "$i->description";
+            ?>
+        </div>
         <div class ="form-group">
             <div id="tag_section">
 
                 <select class="select-tag" multiple="multiple" style="width:100%">
                     <?php
-                        foreach ($tags as $t){
-                            echo "<option value=" . $t['id'] . " selected=\"selected\">" . $t['text'] . "</option>" ;
-                        }
+                    foreach ($tags as $t){
+                        echo "<option value=" . $t['id'] . " selected=\"selected\">" . $t['text'] . "</option>" ;
+                    }
                     ?>
                 </select>
             </div>
         </div>
 
-            <h2>Comment</h2>
+        <h2>Comment</h2>
         <div id="comment_section">
             <?php
-                foreach ($allComment as $c) {
-                    $name = $u->getNameById($c->user_id);
-                    echo "<div class=\"form-group\">
+            foreach ($allComment as $c) {
+                $name = $u->getNameById($c->user_id);
+                echo "<div class=\"form-group\">
                         <h5>$name</h5>
                         <p><small>on $c->timestamp</small></p>
                         <p>$c->comment</p>
                     </div>";
-                }
+            }
             ?>
         </div>
         <form>
@@ -144,8 +144,24 @@ function pr($data)
             console.log(e.params);
             $.ajax({
                 type: "POST",
-                url: 'addTag.php',
+                url: 'TagController.php',
                 data: {text: e.params.data.text, image_id: <?php echo json_encode($image_id); ?>, action: 'add'},    //Or you can e.removed.text
+                error: function () {
+                    alert("error");
+                },
+                success : function(data) {
+                    e.params.data.id = data;
+                    console.log(e.params.data);
+                    alert(data);
+                }
+            });
+        });
+        $(".select-tag").on("select2:unselect", function(e) {
+            console.log(e.params.data);
+            $.ajax({
+                type: "POST",
+                url: 'TagController.php',
+                data: {tag_id: e.params.data.text, action: 'remove'},    //Or you can e.removed.text
                 error: function () {
                     alert("error");
                 },
@@ -165,20 +181,20 @@ function pr($data)
             var comment_author = <?php echo json_encode($name); ?>;
             $.post('postComment.php', {content: content, image_id: image_id}, function () {
             })
-            .done(function(){
-                var newcomment ='<div class="form-group">' +
-                    '<h5>' + comment_author + '</h5>' +
-                    '<p><small>on' + <?php echo json_encode($c->timestamp); ?> + '</small>' + '</p>' +
-                    '<p>' + content +'</p>' +
-                    '</div>';
+                .done(function(){
+                    var newcomment ='<div class="form-group">' +
+                        '<h5>' + comment_author + '</h5>' +
+                        '<p><small>on' + <?php echo json_encode($c->timestamp); ?> + '</small>' + '</p>' +
+                        '<p>' + content +'</p>' +
+                        '</div>';
 
-                //add comment
-                var currentMarkUp = $('#comment_section').html();
-                $('#comment_section').html(currentMarkUp + newcomment);
+                    //add comment
+                    var currentMarkUp = $('#comment_section').html();
+                    $('#comment_section').html(currentMarkUp + newcomment);
 
-                //Clear Text Area
-                $('#content').val("")
-            });
+                    //Clear Text Area
+                    $('#content').val("")
+                });
 
         }
     })
