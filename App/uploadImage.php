@@ -8,13 +8,25 @@
 require_once('../Core/SessionManager.php');
 require_once('../Models/Album.php');
 require_once('../Core/Validator.php');
+require_once('../Models/Privacy.php');
 
 use Database\Models\Image;
+use Database\Models\Privacy;
 use Http\Forms\Validator;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
+
+$privacy = new Privacy();
+$optList = $privacy->listAll();
+function pr($data)
+{
+    echo "<pre>";
+    print_r($data); // or var_dump($data);
+    echo "</pre>";
+}
+//pr($optList);
 if (isset($_POST) && !empty($_POST)) {
 
     $validator = new Validator();
@@ -77,17 +89,6 @@ if (isset($_POST) && !empty($_POST)) {
                 <select id="selAlbum" class="form-control" title="Select">
                     <option>Select Album</option>
                     <?php
-                    require_once('../Models/Privacy.php');
-                    use Database\Models\Privacy;
-                    $privacy = new Privacy();
-                    $optList = $privacy->listAll();
-                    function pr($data)
-                    {
-                        echo "<pre>";
-                        print_r($data); // or var_dump($data);
-                        echo "</pre>";
-                    }
-                    pr($optList);
                     foreach ($optList as $opt)
                     {
                         echo "<option id = $opt->id>".$opt->description."</option>";

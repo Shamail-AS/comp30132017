@@ -25,6 +25,12 @@ class User extends Model
 
     }
 
+    public function getNameById($id){
+        $user = new User();
+        $u = $user->find($id);
+        return $u->name;
+    }
+
     public function isFriendsWith($user)
     {
 

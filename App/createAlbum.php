@@ -6,8 +6,13 @@
  * Time: 17:35
  */
 require_once('../Models/Album.php');
-use Database\Models\Album;
+require_once('../Models/Privacy.php');
 
+use Database\Models\Album;
+use Database\Models\Privacy;
+
+$privacy = new Privacy();
+$optList = $privacy->listAll();
 function pr($data)
 {
     echo "<pre>";
@@ -18,23 +23,17 @@ function pr($data)
 if (isset($_POST) && !empty($_POST)) {
     $album = new Album();
     $album->name = $_POST['name'];
-    $album->description = $_POST['description'];
+    //$album->description = $_POST['description'];
     $album->user_id = 1; //maybe $SESSION->('userid');
-    $user->privacy_level = $_POST['plevel'];
-    if ($album->isExisted()) {
-        $session->addError('albumExisted', 'Please choose a different name');
-        $session->redirect('createAlbum');
-    } else {
+    $album->privacy_level = $_POST['plevel'];
+    pr($_POST['plevel']);
+    //if ($album->isExisted()) {
+        //$session->addError('albumExisted', 'Please choose a different name');
+        //$session->redirect('createAlbum');
+    //} else {
         $album->save();
         pr($album);
-        if (!$user->exists()) {
-            $session->addError('save', 'Could not create album');
-            $session->redirect('createAlbum');
-        } else {
-            //redirect to home page because user has logged in
-            $session->redirect('home');
-        }
-    }
+    //}
 }
 ?>
 
@@ -62,30 +61,27 @@ if (isset($_POST) && !empty($_POST)) {
         <h1>Create Album</h1>
     </div>
     <div>
-        <form action="uploadImage.php" method="post" enctype="multipart/form-data">
+        <form action="createAlbum.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <div>
                     <input type="text" class="form-control" id="name"
-                           placeholder="Name" name="title" required="">
+                           placeholder="Name" name="name" required="">
                 </div>
             </div>
             <div class="form-group">
-                <select id="plevel" class="form-control" title="Select">
+                <select name="plevel" id="plevel" class="form-control" title="Select">
                     <option>Privacy Level</option>
                     <?php
-                    //$image = new Image();
-                    //$options =  $image->findByColumn("user_id", $SESSION->("user_id"))
-                    //TODO After login
-                    $options = array(1, 2, 3, 4);
-                    foreach ($options as $opt) {
-                        echo "<option value = $opt>" . $opt . "</option>";
+                    foreach ($optList as $opt)
+                    {
+                        echo "<option id = $opt->id>".$opt->description."</option>";
                     }
                     ?>
                 </select>
             </div>
             <div class="form-group">
                 <div>
-                    <textarea class="form-control" rows="10" placeholder="Description" name="content"
+                    <textarea class="form-control" rows="10" placeholder="Description" name="description"
                               required=""></textarea>
                 </div>
             </div>
