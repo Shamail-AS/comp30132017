@@ -39,7 +39,8 @@ class DB
         return self::$instance;
     }
 
-    public function raw($sql){
+    protected function raw($sql)
+    {
         if(strpos($sql,"SELECT") !== FALSE){
             return $this->query($sql);
         }

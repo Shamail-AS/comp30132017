@@ -89,7 +89,7 @@ if (isset($_POST) && !empty($_POST)) {
                 ?>
                 <span class="badge badge-danger"><?php echo $error_msg ?></span>
             <?php } ?>
-            <input type="name" name="name" class="form-control" placeholder="Enter your name">
+            <input type="text" name="name" class="form-control" placeholder="Enter your name">
 
         </div>
         <div class="form-group">

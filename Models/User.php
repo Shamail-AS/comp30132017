@@ -9,6 +9,7 @@
 namespace Database\Models;
 
 require_once('../Core/Model.php');
+require_once('../Models/Friendship.php');
 
 class User extends Model
 {
@@ -22,7 +23,9 @@ class User extends Model
 
     public function getFriends()
     {
-
+        $sql = "SELECT * FROM `users` WHERE users.id IN (SELECT `user2` FROM friends WHERE `user1` = $this->id)";
+        $users = parent::raw($sql);
+        return $users;
     }
 
     public function getNameById($id){
@@ -33,6 +36,9 @@ class User extends Model
 
     public function isFriendsWith($user)
     {
-
+        $friendship = new Friendship();
+        return $friendship->areFriends($this, $user);
     }
+
+
 }
