@@ -27,6 +27,9 @@ $image_id = $_GET['id'];
 //echo $_GET['link'];
 $image = new Image();
 $i = $image->find($image_id);
+//pr($i->id);
+$tags = $i->getTags();
+pr($tags);
 //pr($i);
 
 $u = new User();
@@ -59,6 +62,10 @@ function pr($data)
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
+
+    <!-- Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -84,6 +91,18 @@ function pr($data)
                 echo "$i->description";
                 ?>
             </div>
+        <div class ="form-group">
+            <div id="tag_section">
+
+                <select class="select-tag" multiple="multiple" style="width:100%">
+                    <?php
+                        foreach ($tags as $t){
+                            echo "<option value=" . $t['id'] . " selected=\"selected\">" . $t['text'] . "</option>" ;
+                        }
+                    ?>
+                </select>
+            </div>
+        </div>
 
             <h2>Comment</h2>
         <div id="comment_section">
@@ -115,7 +134,27 @@ function pr($data)
 
 
 <script>
-    $(document).ready(function(){ // Add your event handlers inside ready block
+    $(document).ready(function(){
+        var tags = <?php echo json_encode($i->getTags()); ?>;
+        //console.log(tags);
+        $(".select-tag").select2({
+            tags: true
+        })
+        $(".select-tag").on("select2:select", function(e) {
+            console.log(e.params);
+            $.ajax({
+                type: "POST",
+                url: 'addTag.php',
+                data: {text: e.params.data.text, image_id: <?php echo json_encode($image_id); ?>, action: 'add'},    //Or you can e.removed.text
+                error: function () {
+                    alert("error");
+                },
+                success : function(data) {
+                    alert(data);
+                }
+            });
+        });
+
         $("#postCmtBtn").click(function(event) { // button event handler
             event.preventDefault(); // prevent page from redirecting
             postComment();
@@ -124,8 +163,7 @@ function pr($data)
             var content = $('#content').val();
             var image_id = <?php echo json_encode($image_id); ?>;
             var comment_author = <?php echo json_encode($name); ?>;
-            $.post('postComment.php', {content: content, image_id: image_id}, function (data) {
-                //console.log(data);
+            $.post('postComment.php', {content: content, image_id: image_id}, function () {
             })
             .done(function(){
                 var newcomment ='<div class="form-group">' +
