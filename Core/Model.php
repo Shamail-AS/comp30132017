@@ -71,6 +71,7 @@ class Model extends DB
         return $exists;
     }
 
+
     public function all($cols = null)
     {
         return $this->asModel(parent::select($this->table, $cols));
@@ -81,8 +82,20 @@ class Model extends DB
         return $this->asModel(parent::select($this->table, $cols, $clause));
     }
 
+    public function whereIn($cols = null, $col, $in)
+    {
+        $inStmt = "$col IN ( " . join(",", $in) . " )";
+        return $this->where($cols, $inStmt);
+    }
+
+    public function raw($sql)
+    {
+        return $this->asModel(parent::raw($sql));
+    }
+
     private static function asModel($db_records)
     {
+        if (!is_array($db_records)) return $db_records;
         $models = [];
         if (count($db_records) > 0) {
             foreach ($db_records as $db_record) {
