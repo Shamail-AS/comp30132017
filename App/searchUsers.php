@@ -11,6 +11,7 @@ use Database\Models\User;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
+$session->start();
 
 
 $users = [];
@@ -68,7 +69,8 @@ if (isset($_GET) && !empty($_GET)) {
                     <div class="search-result">
                         <p><?php echo $user->name ?></p>
                         <p><?php echo $user->email ?></p>
-                        <button class="btn btn-primary" type="button">Send request</button>
+                        <a href="sendInvite.php?user=<?php echo $user->id ?>" class="btn btn-primary" type="button">Send
+                            request</a>
                     </div>
                 </li>
             <?php } ?>

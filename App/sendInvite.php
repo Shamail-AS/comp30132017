@@ -2,24 +2,44 @@
 /**
  * Created by PhpStorm.
  * User: Shamail
- * Date: 07/02/2017
- * Time: 14:00
+ * Date: 11/02/2017
+ * Time: 11:30
  */
-require_once('../Core/SessionManager.php');
+require_once('../Models/Invite.php');
 require_once('../Models/User.php');
+require_once('../Core/SessionManager.php');
 
+use Database\Models\Invite;
+use Database\Models\User;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
-$user = $session->user;
 
-$session->blockGuest();
+$logged_in_user = $session->user;
+$to_user_id = null;
 
-$friendships = $user->getFriends();
+if (isset($_GET) && !empty($_GET)) {
+    $user = new User();
+    $to_user_id = $_GET['user'];
+    $to_user = $user->find($to_user_id);
+
+}
+if (isset($_POST) && !empty($_POST)) {
+    $invite = new Invite();
+    $invite->user1 = $logged_in_user->id;
+    $invite->user2 = $_POST['receiver'];
+    $invite->message = $_POST['message'];
+    $invite->status = 'pending';
+    $invite->send();
+    //var_dump($_POST);
+    //var_dump($invite);
+    $session->redirect('manageInvites');
+}
 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,36 +60,16 @@ $friendships = $user->getFriends();
 
 <?php include('common/nav.php') ?>
 <div class="container">
-    <h1>Your friends</h1>
-
-    <?php if (count($friendships) == 0) { ?>
-        <div class="alert alert-info">No friends</div>
-    <?php } else {
-        ?>
-
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($friendships as $friend) { ?>
-                <tr>
-                    <td><?php echo $friend->name ?></td>
-                    <td><?php echo $friend->email ?></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Profile</a></td>
-                </tr>
-            <?php } ?>
-
-            </tbody>
-        </table>
-
-    <?php } ?>
-
-
+    <h1>Send connection request</h1>
+    <h3>to <?php echo $to_user->name ?></h3>
+    <form class="form" method="post" action="sendInvite.php">
+        <div class="form-group">
+            <input type="hidden" value="<?php echo $to_user_id ?>" name="receiver">
+            <input class="form-control" type="text" name="message" placeholder="enter message">
+            <button class="btn btn-success" type="submit">Send Invite</button>
+            <button onclick="window.history.back()" class="btn btn-warning" type="button">Cancel</button>
+        </div>
+    </form>
 </div>
 
 
@@ -86,7 +86,6 @@ $friendships = $user->getFriends();
 
 </body>
 </html>
-
 
 
 

@@ -5,7 +5,18 @@
  * Date: 07/02/2017
  * Time: 11:39
  */
+require_once('../Core/SessionManager.php');
+require_once('../Models/User.php');
 
+use Database\Models\User;
+use Http\Session\SessionManager;
+
+$session = new SessionManager();
+$user = $session->user;
+if ($user == null) {
+    $user = new User();
+    $user->name = "Guest";
+}
 ?>
 <style>
     body {
@@ -19,17 +30,17 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">Soci.al</a>
+    <a class="navbar-brand" href="home.php">Soci.al</a>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link disabled" href="#"><?php echo $user->name ?></a>
             </li>
         </ul>
         <!--        <form class="form-inline mt-2 mt-md-0">-->
@@ -38,3 +49,7 @@
         <!--        </form>-->
     </div>
 </nav>
+
+<?php if ($session->hasMessage()) { ?>
+    <div class="alert alert-success"><?php echo $session->readMessage() ?></div>
+<?php } ?>

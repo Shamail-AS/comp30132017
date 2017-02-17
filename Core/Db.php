@@ -73,8 +73,7 @@ class DB
     protected function update($table, $id, $data)
     {
         $updateString = implode(",",$this->zipArray($data));
-        $statement = "UPDATE TABLE $table SET $updateString WHERE `id`=$id";
-        //print $statement;
+        $statement = "UPDATE $table SET $updateString WHERE `id`=$id";
         return $this->exec($statement);
     }
 
@@ -109,7 +108,8 @@ class DB
     {
         $zipped = [];
         foreach ($array as $key=>$value){
-            array_push($zipped, "`$key`=$value");
+            if ($key == 'id') continue;
+            array_push($zipped, "`$key`='$value'");
         }
         return $zipped;
     }

@@ -17,6 +17,9 @@ class SessionManager
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
                 $_SESSION['errors'] = [];
+                if (isset($_SESSION['message'])) {
+                    unset($_SESSION['message']);
+                }
             }
             return $this;
         } else
@@ -37,6 +40,11 @@ class SessionManager
         else {
             return $this->start();
         }
+    }
+
+    public function has($key)
+    {
+        return array_key_exists($key, $_SESSION) && !empty($_SESSION[$key]);
     }
 
     public function hasErrors()
@@ -71,6 +79,7 @@ class SessionManager
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
             $_SESSION['errors'] = [];
+            unset($_SESSION['message']);
         }
     }
 
@@ -100,12 +109,38 @@ class SessionManager
         die();
     }
 
+    public function flash($message)
+    {
+        $this->message = $message;
+    }
+
+    public function hasMessage()
+    {
+        return $this->has('message');
+    }
+
+    public function readMessage()
+    {
+        $message = $this->message;
+        unset($_SESSION['message']);
+        return $message;
+    }
+
     public function end()
     {
         if (session_status() == PHP_SESSION_ACTIVE) {
             session_unset();
-            session_abort();
             session_destroy();
+            session_abort();
+
+        }
+    }
+
+    public function blockGuest()
+    {
+        $user = $this->user;
+        if (!isset($user) || empty($user) || is_null($user)) {
+            $this->dd("Only logged in users are allowed from this point onwards");
         }
     }
 }

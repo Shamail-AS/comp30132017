@@ -38,7 +38,7 @@ class Model extends DB
 
     public function findByColumn($column, $value)
     {
-        $result = ($this->where(null, "$column=$value"));
+        $result = ($this->where(null, "`$column` = '$value'"));
         if ($result == null) return null;
         if (count($result) == 0) return null;
         else {

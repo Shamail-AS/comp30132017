@@ -10,6 +10,7 @@ namespace Database\Models;
 
 require_once('../Core/Model.php');
 require_once('../Models/Friendship.php');
+require_once('../Models/Invite.php');
 
 class User extends Model
 {
@@ -40,5 +41,15 @@ class User extends Model
         return $friendship->areFriends($this, $user);
     }
 
+    public function invites()
+    {
+        $invite = new Invite();
+        $received = $invite->allFor($this);
+        $sent = $invite->allBy($this);
+        return [
+            'received' => $received,
+            'sent' => $sent
+        ];
+    }
 
 }

@@ -35,4 +35,20 @@ class Validator
         }
         return $errors;
     }
+
+    public function validateUserLoginData($post_data)
+    {
+        $errors = [];
+        $messages = [
+
+            'username' => 'username is missing',
+            'password' => 'password is missing',
+        ];
+        foreach ($post_data as $key => $value) {
+            if (empty($post_data[$key])) {
+                $errors[$key] = $messages[$key];
+            }
+        }
+        return $errors;
+    }
 }
