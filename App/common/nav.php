@@ -37,7 +37,13 @@ if ($user == null) {
                 <a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="logout.php">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="searchUsers.php">Search</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="manageInvites.php">Requests</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#"><?php echo $user->name ?></a>
@@ -50,6 +56,3 @@ if ($user == null) {
     </div>
 </nav>
 
-<?php if ($session->hasMessage()) { ?>
-    <div class="alert alert-success"><?php echo $session->readMessage() ?></div>
-<?php } ?>

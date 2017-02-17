@@ -5,12 +5,14 @@ require_once('../Models/User.php');
 require_once('../Models/Invite.php');
 
 use Database\Models\Invite;
+use Database\Models\User;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
 
 $user = $session->user;
+$user = new User($user->getAllData());
 $invites = $user->invites();
 
 if (isset($_GET) && !empty($_GET)) {
@@ -46,9 +48,9 @@ if (isset($_GET) && !empty($_GET)) {
 <?php include('common/nav.php') ?>
 <div class="container">
     <h1>Manage Invites</h1>
-    <!--    --><?php //if($session->hasMessage()){ ?>
-    <!--        <div class="alert alert-success">--><?php //echo $session->readMessage() ?><!--</div>-->
-    <!--    --><?php //} ?>
+    <?php if ($session->hasMessage()) { ?>
+        <div class="alert alert-success"><?php echo $session->readMessage() ?></div>
+    <?php } ?>
     <?php if (count($invites) == 0) { ?>
         <div class="alert alert-info">No invites pending</div>
     <?php } else {
@@ -66,7 +68,7 @@ if (isset($_GET) && !empty($_GET)) {
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($invites['sent'] as $invite) { ?>
+            <?php foreach ($invites['all'] as $invite) { ?>
 
                 <tr>
                     <td><?php echo $invite->isSentBy($user) ? 'Sent' : 'Received' ?></td>
@@ -76,21 +78,25 @@ if (isset($_GET) && !empty($_GET)) {
                     <td><?php echo $invite->status ?></td>
                     <td>
                         <?php if ($invite->status == 'pending') { ?>
-                            <form class="form-inline" method="get" action="manageInvites.php">
-                                <input type="hidden" name="id" value="<?php echo $invite->id ?>">
-                                <input type="hidden" name="action" value="accept">
-                                <button class="btn btn-sm btn-success" type="submit">Accept</button>
-                            </form>
-                            <form class="form-inline" method="get" action="manageInvites.php">
-                                <input type="hidden" name="id" value="<?php echo $invite->id ?>">
-                                <input type="hidden" name="action" value="reject">
-                                <button class="btn btn-sm btn-danger" type="submit">Reject</button>
-                            </form>
-                            <form class="form-inline" method="get" action="manageInvites.php">
-                                <input type="hidden" name="id" value="<?php echo $invite->id ?>">
-                                <input type="hidden" name="action" value="cancel">
-                                <button class="btn btn-sm btn-default" type="submit">Cancel</button>
-                            </form>
+
+                            <?php if (!$invite->isSentBy($user)) { ?>
+                                <form class="form-inline" method="get" action="manageInvites.php">
+                                    <input type="hidden" name="id" value="<?php echo $invite->id ?>">
+                                    <input type="hidden" name="action" value="accept">
+                                    <button class="btn btn-sm btn-success" type="submit">Accept</button>
+                                </form>
+                                <form class="form-inline" method="get" action="manageInvites.php">
+                                    <input type="hidden" name="id" value="<?php echo $invite->id ?>">
+                                    <input type="hidden" name="action" value="reject">
+                                    <button class="btn btn-sm btn-danger" type="submit">Reject</button>
+                                </form>
+                            <?php } else { ?>
+                                <form class="form-inline" method="get" action="manageInvites.php">
+                                    <input type="hidden" name="id" value="<?php echo $invite->id ?>">
+                                    <input type="hidden" name="action" value="cancel">
+                                    <button class="btn btn-sm btn-default" type="submit">Withdraw</button>
+                                </form>
+                            <?php } ?>
                         <?php } ?>
                     </td>
                 </tr>

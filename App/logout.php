@@ -16,3 +16,4 @@ $session->end();
 
 echo "Logged out";
 var_dump($_SESSION);
+$session->redirect('login');

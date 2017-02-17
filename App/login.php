@@ -15,7 +15,7 @@ use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
-
+$session->onlyGuest();
 if (isset($_POST) && !empty($_POST)) {
     $validator = new Validator();
     $errors = $validator->validateUserLoginData($_POST);

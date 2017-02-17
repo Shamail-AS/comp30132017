@@ -140,7 +140,17 @@ class SessionManager
     {
         $user = $this->user;
         if (!isset($user) || empty($user) || is_null($user)) {
-            $this->dd("Only logged in users are allowed from this point onwards");
+            //$this->dd("Only logged in users are allowed from this point onwards");
+            $this->flash("Only logged in users are allowed from this point onwards");
+            $this->redirect('login');
+        }
+    }
+
+    public function onlyGuest()
+    {
+        $user = $this->user;
+        if (isset($user) || !empty($user) || !is_null($user)) {
+            $this->redirect('home');
         }
     }
 }

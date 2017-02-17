@@ -10,6 +10,7 @@ class Model extends DB
     protected $table = "";
     protected $primaryKey = "id";
     protected $data = [];
+    protected $columns = []; //not used right now but maybe later
 
     public function __construct(array $attributes = [])
     {
@@ -88,6 +89,12 @@ class Model extends DB
         return $this->where($cols, $inStmt);
     }
 
+    public function whereNotIn($cols = null, $col, $in)
+    {
+        $inStmt = "$col NOT IN ( " . join(",", $in) . " )";
+        return $this->where($cols, $inStmt);
+    }
+
     public function raw($sql)
     {
         return $this->asModel(parent::raw($sql));
@@ -112,5 +119,9 @@ class Model extends DB
         return $model;
     }
 
+    public function getAllData()
+    {
+        return $this->data;
+    }
 
 }

@@ -29,6 +29,16 @@ class User extends Model
         return $users;
     }
 
+    public function getFriendsOfFriends()
+    {
+        $sql = "SELECT * from users where id in(
+                SELECT user2 from friends where user1 in (
+                SELECT user2 from friends where user1 = $this->id))
+                and id <> $this->id
+                and id NOT IN (SELECT user2 from friends where user1 = $this->id)"; //except friends id
+        $users = parent::raw($sql);
+        return $users;
+    }
     public function getNameById($id){
         $user = new User();
         $u = $user->find($id);
@@ -41,6 +51,25 @@ class User extends Model
         return $friendship->areFriends($this, $user);
     }
 
+    public function hasContacted($user)
+    {
+        $inv = new Invite();
+        return $inv->existsBetween($this, $user, 'pending');
+    }
+
+    public function age()
+    {
+        $now = new \DateTime();
+        $dob = new \DateTime($this->dob);
+        $interval = $now->diff($dob, true);
+        return intval($interval->format("%y"));
+    }
+
+    public function isSameAgeGroupAs($user)
+    {
+        return (abs($user->age() - $this->age()) < 5);
+    }
+
     public function invites()
     {
         $invite = new Invite();
@@ -48,7 +77,8 @@ class User extends Model
         $sent = $invite->allBy($this);
         return [
             'received' => $received,
-            'sent' => $sent
+            'sent' => $sent,
+            'all' => array_merge($received, $sent)
         ];
     }
 

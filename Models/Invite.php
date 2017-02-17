@@ -85,6 +85,12 @@ class Invite extends Model
         return $invites;
     }
 
+    public function existsBetween($user1, $user2, $status)
+    {
+        $invites = $this->where(null, "((user1 = $user1->id and user2 = $user2->id) or (user1 = $user2->id and user2 = $user1->id)) and status = '$status'");
+        return count($invites) > 0;
+    }
+
     public function isSentBy($user)
     {
         return $this->user1 == $user->id;

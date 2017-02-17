@@ -7,16 +7,27 @@
  */
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
+require_once('../Models/Friendship.php');
 
+use Database\Models\Friendship;
+use Database\Models\User;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
-$user = $session->user;
-
 $session->blockGuest();
+$user = $session->user;
+$user = new User($user->getAllData());
+
+
 
 $friendships = $user->getFriends();
+
+$suggestions = $user->getFriendsOfFriends();
+
+$friendship = new Friendship();
+$suggestions = $friendship->suggestionsFor($user);
+//var_dump($suggestions_extra);
 
 
 ?>
@@ -66,6 +77,35 @@ $friendships = $user->getFriends();
 
             </tbody>
         </table>
+
+    <?php } ?>
+
+    <h1>Suggested friends</h1>
+
+    <?php if (count($suggestions) == 0) { ?>
+        <div class="alert alert-info">No friends</div>
+    <?php } else {
+        ?>
+
+        <ul class="list-group">
+            <?php foreach ($suggestions as $s_user) { ?>
+                <li class="list-group-item">
+                    <div class="search-result">
+                        <p><?php echo $s_user->name ?></p>
+                        <p><?php echo $s_user->email ?></p>
+                        <?php if (!$user->hasContacted($s_user)) { ?>
+                            <a href="sendInvite.php?user=<?php echo $s_user->id ?>" class="btn btn-primary"
+                               type="button">Send
+                                request</a>
+                        <?php } else {
+                            echo "A connection request already exists";
+                            ?>
+                            <a href="manageInvites.php" class="btn btn-default" type="button">Requests</a>
+                        <?php } ?>
+                    </div>
+                </li>
+            <?php } ?>
+        </ul>
 
     <?php } ?>
 
