@@ -6,19 +6,30 @@
  * Time: 17:05
  */
 require_once('../Models/Circle.php');
+require_once('../Models/Circle_Members.php');
+require_once('../Core/SessionManager.php');
+require_once('../Models/User.php');
+
 
 use Database\Models\Circle;
+use Database\Models\Circle_Members;
+use Http\Session\SessionManager;
+
+$session = new SessionManager();
+$session->start();
+$session->blockGuest();
+$user = $session->user;
+
+
 
 if (isset($_POST) && !empty($_POST)) {
 
     $circle = new Circle();
     $circle->circle_name = $_POST['circle_name'];
-    $circle->owner = $_POST['owner'];
-    $circle->id = $_POST['id'];
-
+    $circle->owner = $user->id;
     $circle->save();
-
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,14 +54,6 @@ if (isset($_POST) && !empty($_POST)) {
         <div class="form-group">
             <label>Circle name</label>
             <input type="text" name="circle_name" class="form-control" placeholder="Enter circle name">
-        </div>
-        <div class="form-group">
-            <label>ID</label>
-            <input type="text" name="id" class="form-control" placeholder="Enter id">
-        </div>
-        <div class="form-group">
-            <label>Owner</label>
-            <input type="text" name="owner" class="form-control" placeholder="Owner">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

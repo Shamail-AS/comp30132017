@@ -56,6 +56,11 @@ if ($user == null) {
             <li class="nav-item">
                 <a class="nav-link disabled" href="#"><?php echo $user->name ?></a>
             </li>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="createCircle.php">Create Circle</a>
+            </li>
+            <li class="nav-item">
         </ul>
         <!--        <form class="form-inline mt-2 mt-md-0">-->
         <!--            <input class="form-control mr-sm-2" type="text" placeholder="Search">-->
