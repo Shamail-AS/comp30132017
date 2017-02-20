@@ -9,16 +9,20 @@ require_once('../Core/SessionManager.php');
 require_once('../Models/Image.php');
 require_once('../Models/Comment.php');
 require_once('../Models/User.php');
+require_once('../Models/Album.php');
 
 use Database\Models\Image;
 use Database\Models\User;
 use Database\Models\Comment;
+use Database\Models\Album;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 $user = $session->user;
+
+$album = new Album();
 
 if (!isset($_GET['id'])) {
     // Fallback behaviour goes here
@@ -31,6 +35,8 @@ $image = new Image();
 $i = $image->find($image_id);
 //pr($i->id);
 $tags = $i->getTags();
+
+$a = $album->find($i->album_id);
 //pr($tags);
 //pr($i);
 

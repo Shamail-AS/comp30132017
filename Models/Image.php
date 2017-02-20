@@ -20,9 +20,6 @@ class Image extends Model
         return $rows;
     }
 
-    function isOwnedBy($user_id) {
-    }
-
     function getByAlbumID($id) {
         $rows = parent::findByColumn("album_id", $id);
         return $rows;

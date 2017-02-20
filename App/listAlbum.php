@@ -74,7 +74,7 @@ function pr($data)
         $url = "viewAlbum.php?id=" . $user_id;
         $u = new User();
         $name = $u->getNameById($user_id);
-        echo "<h1>All Album By" . $name . "</h1>"
+        echo "<h1>All Album By " . $name . "</h1>"
         ?>
         <h5><a href= "home.php">Back To Home</a></h5>
     </div>

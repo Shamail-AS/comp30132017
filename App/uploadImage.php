@@ -31,27 +31,53 @@ function pr($data)
     print_r($data); // or var_dump($data);
     echo "</pre>";
 }
+
+
+
 //pr($optList);
 if (isset($_POST) && !empty($_POST)) {
-    $validator = new Validator();
-    $errors = $validator->validateUserRegistrationData($_POST);
-    if (count($errors) > 0) {
-        foreach ($errors as $key => $value) {
-            $session->addError($key, $value);
-        }
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+    // Check if image file is a actual image or fake image
+    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    if($check !== false) {
+        $uploadOk = 1;
     } else {
-        //$session->clean();
+        $session->addError('invalidType', "File is an image - " . $check["mime"] . ".");
+        $session->redirect("uploadImage");
+        $uploadOk = 0;
     }
-    //var_dump($session->errors());
+
+    // Check if file already exists
+    if (file_exists($target_file)) {
+        $session->addError('fileExisted', "Sorry, file already exists.");
+        $session->redirect("uploadImage");
+        $uploadOk = 0;
+    }
+
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+        $session->addError('invalidType2', "Sorry, only JPG, JPEG, PNG files are allowed.");
+        $uploadOk = 0;
+    }
+
+    //Upload File
     if ($session->hasErrors()) {
-        //add redirection back to form
         $session->redirect('uploadImage');
-        //var_dump($session->errors());
-    } else {
-        $image = new Image();
-        $image->name = $_POST['name'];
-        $image->description = $_POST['description'];
-        $image->album_id = $_POST['album_id'];
+    }
+    else {
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            $image = new Image();
+            $image->name = $_POST['name'];
+            $image->description = $_POST['description'];
+            $image->album_id = $_POST['album_id'];
+            echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
     }
 }
 ?>
@@ -65,7 +91,7 @@ if (isset($_POST) && !empty($_POST)) {
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Make a Post</title>
+	<title>Upload Image</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">

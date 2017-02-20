@@ -78,7 +78,7 @@ function pr($data)
                 $url = "listAlbum.php?user=" . $a->user_id;
                 $u = new User();
                 $name = $u->getNameById($a->user_id);
-                echo "<h6><a href= ". $url . ">Show All Album By " . $name . "</a></h6>"
+                echo "<h6><a href= ". $url . ">Show All Album By " . $name . "</a></h6>";
                 ?>
             </div>
             <div>

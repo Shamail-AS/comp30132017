@@ -37,6 +37,14 @@ if ($user == null) {
                 <a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
+                <?php
+                if ($user != null) {
+                    $url = "listAlbum.php?user=" . $user->id;
+                    echo "<li class=\"nav-item\"><a class=\"nav-link\" href= " . $url . ">My Album</a></li>";
+                }
+                ?>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="logout.php">Logout</a>
             </li>
             <li class="nav-item">
