@@ -40,12 +40,12 @@ class Tag extends Model
     public function getIDbyKey($key) {
         $sql = "SELECT `id` FROM tags WHERE `key` = '$key'";
         $result = parent::raw($sql);
-        return $result[0]['id'];
+        return $result[0]->id;
     }
 
     public function removeTag($key) {
         $id = $this->getIDbyKey($key);
-        echo $id;
+        //echo $id;
         parent::deleteByColumn("image_tags", "tag", $id);
         parent::delete("tags", $id);
     }

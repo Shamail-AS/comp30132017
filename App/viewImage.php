@@ -172,7 +172,7 @@ function pr($data)
             });
         });
         $(".select-tag").on("select2:unselect", function(e) {
-            console.log(e.params.data);
+            console.log(e.params.data.text);
             $.ajax({
                 type: "POST",
                 url: 'TagController.php',
