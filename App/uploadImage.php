@@ -9,17 +9,22 @@ require_once('../Core/SessionManager.php');
 require_once('../Models/Album.php');
 require_once('../Core/Validator.php');
 require_once('../Models/Privacy.php');
+require_once('../Models/User.php');
 
 use Database\Models\Image;
 use Database\Models\Privacy;
 use Http\Forms\Validator;
 use Http\Session\SessionManager;
+use Database\Models\Album;
+use Database\Models\User;
 
 $session = new SessionManager();
 $session->start();
+$session->blockGuest();
+$user = $session->user;
 
-$privacy = new Privacy();
-$optList = $privacy->listAll();
+$album = new Album();
+$optList = $album->getByUser($user->id);
 function pr($data)
 {
     echo "<pre>";
@@ -28,7 +33,6 @@ function pr($data)
 }
 //pr($optList);
 if (isset($_POST) && !empty($_POST)) {
-
     $validator = new Validator();
     $errors = $validator->validateUserRegistrationData($_POST);
     if (count($errors) > 0) {
@@ -48,8 +52,6 @@ if (isset($_POST) && !empty($_POST)) {
         $image->name = $_POST['name'];
         $image->description = $_POST['description'];
         $image->album_id = $_POST['album_id'];
-
-
     }
 }
 ?>
@@ -91,7 +93,7 @@ if (isset($_POST) && !empty($_POST)) {
                     <?php
                     foreach ($optList as $opt)
                     {
-                        echo "<option id = $opt->id>".$opt->description."</option>";
+                        echo "<option id = $opt->id>".$opt->name."</option>";
                     }
                     ?>
                 </select>

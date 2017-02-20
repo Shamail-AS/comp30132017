@@ -17,10 +17,12 @@ use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
+$session->blockGuest();
+$user = $session->user;
 
 if (!isset($_GET['id'])) {
     // Fallback behaviour goes here
-    $session->redirect('index');
+    $session->redirect('home');
 }
 
 $image_id = $_GET['id'];
@@ -35,7 +37,7 @@ $tags = $i->getTags();
 $u = new User();
 
 $comment = new Comment();
-$allComment = $comment->findByColumn("image_id", 1);
+$allComment = $comment->findByColumn("image_id", $image_id);
 
 function pr($data)
 {
@@ -75,7 +77,10 @@ function pr($data)
 
     <div class="starter-template">
         <h1>View Image</h1>
-        <h6><a href="#">Back To Album</a></h6>
+        <?php
+        $url = "viewAlbum.php?id=" . $i->album_id;
+        echo "<h6><a href= ". $url . ">Back To Album</a></h6>"
+        ?>
     </div>
     <div>
         <div class="form-group">
@@ -96,8 +101,10 @@ function pr($data)
 
                 <select class="select-tag" multiple="multiple" style="width:100%">
                     <?php
-                    foreach ($tags as $t){
-                        echo "<option value=" . $t->id . " selected=\"selected\">" . $t->text . "</option>" ;
+                    if (!empty($tags)) {
+                        foreach ($tags as $t) {
+                            echo "<option value=" . $t->id . " selected=\"selected\">" . $t->text . "</option>";
+                        }
                     }
                     ?>
                 </select>
@@ -107,13 +114,15 @@ function pr($data)
         <h2>Comment</h2>
         <div id="comment_section">
             <?php
-            foreach ($allComment as $c) {
-                $name = $u->getNameById($c->user_id);
-                echo "<div class=\"form-group\">
+            if (!empty($allComment)) {
+                foreach ($allComment as $c) {
+                    $name = $u->getNameById($c->user_id);
+                    echo "<div class=\"form-group\">
                         <h5>$name</h5>
                         <p><small>on $c->timestamp</small></p>
                         <p>$c->comment</p>
                     </div>";
+                }
             }
             ?>
         </div>
@@ -135,7 +144,7 @@ function pr($data)
 
 <script>
     $(document).ready(function(){
-        var tags = <?php echo json_encode($i->getTags()); ?>;
+        var tags = <?php echo json_encode($tags); ?>;
         //console.log(tags);
         $(".select-tag").select2({
             tags: true
@@ -152,7 +161,7 @@ function pr($data)
                 success : function(data) {
                     e.params.data.id = data;
                     console.log(e.params.data);
-                    alert(data);
+                    //alert(data);
                 }
             });
         });
@@ -166,7 +175,7 @@ function pr($data)
                     alert("error");
                 },
                 success : function(data) {
-                    alert(data);
+                    //alert(data);
                 }
             });
         });
@@ -178,13 +187,13 @@ function pr($data)
         function postComment() {
             var content = $('#content').val();
             var image_id = <?php echo json_encode($image_id); ?>;
-            var comment_author = <?php echo json_encode($name); ?>;
+            var comment_author = <?php echo json_encode($user->name); ?>;
             $.post('postComment.php', {content: content, image_id: image_id}, function () {
             })
                 .done(function(){
                     var newcomment ='<div class="form-group">' +
                         '<h5>' + comment_author + '</h5>' +
-                        '<p><small>on' + <?php echo json_encode($c->timestamp); ?> + '</small>' + '</p>' +
+                        '<p><small>' + 'Now' + '</small>' + '</p>' +
                         '<p>' + content +'</p>' +
                         '</div>';
 

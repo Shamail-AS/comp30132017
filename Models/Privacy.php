@@ -18,4 +18,9 @@ class Privacy extends Model
         $result = $this->all();
         return $result;
     }
+
+    public function getIdByName($name) {
+        $result = parent::findByColumn("description", $name);
+        return $result[0]->id;
+    }
 }

@@ -19,4 +19,9 @@ class Album extends Model
         $result = $this->where('name', "name = '$this->name'");
         return (count($result) != 0);
     }
+
+    public function getByUser($user_id) {
+        $rows = parent::findByColumn("user_id", $user_id);
+        return $rows;
+    }
 }
