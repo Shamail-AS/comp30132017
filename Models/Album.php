@@ -20,6 +20,11 @@ class Album extends Model
         return (count($result) != 0);
     }
 
+    public function getByUser($user_id) {
+        $rows = parent::findByColumn("user_id", $user_id);
+        return $rows;
+    }
+
     public function isOwned($user_id) {
         if ($this->user_id == $user_id) {
             return true;
