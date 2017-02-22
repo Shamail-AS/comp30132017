@@ -6,14 +6,16 @@
  * Time: 17:05
  */
 require_once('../Models/Circle.php');
-require_once('../Models/Circle_Members.php');
+require_once('../Models/Circles_Member.php');
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
 
 
+
 use Database\Models\Circle;
-use Database\Models\Circle_Members;
+use Database\Models\Circles_Member;
 use Http\Session\SessionManager;
+use Database\Models\Users;
 
 $session = new SessionManager();
 $session->start();
@@ -27,7 +29,24 @@ if (isset($_POST) && !empty($_POST)) {
     $circle = new Circle();
     $circle->circle_name = $_POST['circle_name'];
     $circle->owner = $user->id;
-    $circle->save();
+    $circles_member = new Circles_Member();
+    $circles_member->circle = $circle->id;
+    $circles_member->user = $circle->owner;
+
+    if ($circle->isExisted()) {
+        $session->addError('circleExisted', 'Please choose a different name');
+        $session->redirect('createCircle');
+    } else {
+        $circle->save();
+        $circles_member = new Circles_Member();
+        $circles_member->circle = $circle->id;
+        $circles_member->user = $circle->owner;
+        $circles_member->save();
+    }
+
+
+
+
 }
 
 ?>
@@ -52,10 +71,16 @@ if (isset($_POST) && !empty($_POST)) {
     <h1>Create Circle</h1>
     <form action="createCircle.php" method="post">
         <div class="form-group">
-            <label>Circle name</label>
+            <?php if ($session->hasErrors() && $session->getError("circleExisted")) {
+            $error_msg = $session->getError("circleExisted");
+            ?>
+                <span class="badge badge-danger"><?php echo $error_msg ?></span>
+            <?php } ?>
+            <label>Title</label>
             <input type="text" name="circle_name" class="form-control" placeholder="Enter circle name">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <p><h4><a href = listCircle.php>Back to my Circles</h4></p>
     </form>
 </div>
 

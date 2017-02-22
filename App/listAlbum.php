@@ -12,7 +12,7 @@ $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 $user = $session->user;
-$user = new User($user->getAllData());
+$user = new User();
 
 if (!isset($_GET['user'])) {
     // Fallback behaviour goes here

@@ -58,7 +58,7 @@ if ($user == null) {
             </li>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="createCircle.php">Create Circle</a>
+                <a class="nav-link" href="listCircle.php">My Circles</a>
             </li>
             <li class="nav-item">
         </ul>
