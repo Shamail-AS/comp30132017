@@ -36,6 +36,7 @@ if (isset($_POST) && !empty($_POST)) {
     if ($circle->isExisted()) {
         $session->addError('circleExisted', 'Please choose a different name');
         $session->redirect('createCircle');
+
     } else {
         $circle->save();
         $circles_member = new Circles_Member();
@@ -76,7 +77,6 @@ if (isset($_POST) && !empty($_POST)) {
             ?>
                 <span class="badge badge-danger"><?php echo $error_msg ?></span>
             <?php } ?>
-            <label>Title</label>
             <input type="text" name="circle_name" class="form-control" placeholder="Enter circle name">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

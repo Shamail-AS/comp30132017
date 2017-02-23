@@ -14,7 +14,6 @@ require_once('../Models/User.php');
 
 use Database\Models\Circle;
 use Http\Session\SessionManager;
-use Database\Models\User;
 use Database\Models\Circles_Member;
 
 
@@ -61,7 +60,7 @@ $mycircles = $circles->getByUser($user_id);
 if (!empty($mycircles)) {
     foreach ($mycircles as $a) {
         $myname = $circle->idToName($a->circle);
-        echo "<h5>$myname</h5>";
+        echo "<h5><a href=\"viewCircle.php?id=" . $a->circle . "\">$myname</a></h5>";
     }
 }
 else {
@@ -69,12 +68,11 @@ else {
 }
 ?>
 
+<div align = center><h4><a href = "createCircle.php">Create New Circle</h4></div>
 
 
 
 
-
-<h4><a href = "createCircle.php">Create New Circle</h4>
 
 
 </body>

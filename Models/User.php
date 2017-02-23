@@ -45,6 +45,17 @@ class User extends Model
         return $u->name;
     }
 
+    public function getIdByName($username){
+        $user = new User();
+        $u = $user->findByColumn('username',$username);
+        foreach($u as $u2){
+            $id = $u2->id;
+        }
+        return $id;
+
+
+    }
+
     public function isFriendsWith($user)
     {
         $friendship = new Friendship();
@@ -81,5 +92,7 @@ class User extends Model
             'all' => array_merge($received, $sent)
         ];
     }
+
+
 
 }
