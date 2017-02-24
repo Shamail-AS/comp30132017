@@ -16,11 +16,13 @@ class User extends Model
 {
     protected $table = 'users';
 
-    public function isRegistered()
+    public function isRegistered($name = null)
     {
-        $result = $this->where('username', "username = '$this->username'");
+        $name = $name ?? $this->username;
+        $result = $this->where('username', "username = '$name'");
         return (count($result) != 0);
     }
+
 
     public function getFriends()
     {

@@ -37,12 +37,11 @@ $members = $group->getByCircleId($circle_id);
 
 if (isset($_POST) && !empty($_POST)) {
     $friend_name = $_POST['user'];
-    if($user->isRegistered($friend_name) !=0) {
+    if(!$user->isRegistered($friend_name)) {
         $session->addError('noUser', 'This user does not exist');
         $session->redirect("#");
     }
     else {
-
         $user = new User();
         $id2 = $user->getIdbyName($friend_name);
 
