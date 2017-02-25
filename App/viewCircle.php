@@ -9,11 +9,13 @@ require_once('../Models/Circle.php');
 require_once('../Models/Circles_Member.php');
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
+require_once('../Models/Friendship.php');
 
 use Database\Models\Circle;
 use Http\Session\SessionManager;
 use Database\Models\Circles_Member;
 use Database\Models\User;
+use Database\Models\Friendship;
 
 $session = new SessionManager();
 $session->start();
@@ -41,15 +43,21 @@ if (isset($_POST) && !empty($_POST)) {
         $session->addError('noUser', 'This user does not exist');
         $session->redirect("#");
     }
-    else {
-        $user = new User();
-        $id2 = $user->getIdbyName($friend_name);
 
-        if ($group->areConnected($id2, $circle_id) == true) {
-            $session->addError('userExists', 'This user is  already in a circle');
+    else {
+        $friendships = new Friendship();
+        $reciever = $user->getIdbyName($friend_name);
+        $reciever_object = $user->getUserById($reciever);
+
+        if(!$friendships->areFriends($user,$reciever_object)){
+            $session->addError('notFriends', 'You can only add your friends to the group');
+            $session->redirect("#");
+
+        }else if($group->areConnected($reciever, $circle_id) == true) {
+        $session->addError('userExists', 'This user is  already in a circle');
 
         } else {
-            $group->user = $id2;
+            $group->user = $reciever;
             $group->circle = $circle_id;
             $group->save();
         }
@@ -100,6 +108,11 @@ if (isset($_POST) && !empty($_POST)) {
     <h3>Add friends to the group</h3>
     <form action="#" method="post">
         <div class="form-group">
+            <?php if ($session->hasErrors() && $session->getError("notFriends")) {
+                $error_msg = $session->getError("notFriends");
+                ?>
+                <span class="badge badge-danger"><?php echo $error_msg ?></span>
+            <?php } ?>
             <?php if ($session->hasErrors() && $session->getError("noUser")) {
                 $error_msg = $session->getError("noUser");
                 ?>

@@ -19,6 +19,7 @@ class Friendship extends Model
         return count($friendship) > 0;
     }
 
+
     public function allFriends($user)
     {
         return parent::where("user2", "user1 = $user->id");

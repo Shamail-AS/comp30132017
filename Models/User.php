@@ -23,6 +23,13 @@ class User extends Model
         return (count($result) != 0);
     }
 
+    public function getUserById($id){
+
+        $sql = "SELECT * FROM users WHERE id = $id";
+        $users = parent::raw($sql);
+        return $users[0];
+
+    }
 
     public function getFriends()
     {
