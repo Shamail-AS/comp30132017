@@ -54,6 +54,14 @@ if ($user == null) {
                 <a class="nav-link" href="manageInvites.php">Requests</a>
             </li>
             <li class="nav-item">
+                <?php
+                if ($user != null) {
+                    $url = "blog.php?user=" . $user->id;
+                    echo "<li class=\"nav-item\"><a class=\"nav-link\" href= " . $url . ">My Blog</a></li>";
+                }
+                ?>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link disabled" href="#"><?php echo $user->name ?></a>
             </li>
             </li>
