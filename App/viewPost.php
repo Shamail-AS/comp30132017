@@ -25,6 +25,8 @@ $blog_post = new Blog_post();
 $b = $blog_post->find($blog_post_id);
 
 
+
+
 ?>
 
 <!DOCTYPE html>

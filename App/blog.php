@@ -48,7 +48,7 @@ $blogs = $blog->getByUser($user_id);
                 foreach ($blogs as $b) {
 
                     echo '<div>';
-                        echo '<h1>'.$b->post_title.'/h1>';
+                        echo '<h1>'.$b->post_title.'</h1>';
                         echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($b->timestamp)).'</p>';
                         echo '<p><a href = "viewPost.php?id= '.$b->id.'">Read More</a></p>';
                     echo '</div>';
