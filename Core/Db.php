@@ -77,28 +77,25 @@ class DB
         return $this->exec($statement);
     }
 
-    protected function delete($table, $id)
+    protected function deleteWhere($table, $where)
     {
-        $statement = "DELETE FROM $table WHERE `id` = $id";
-        //print $statement;
-        return $this->exec($statement);
-    }
-
-    protected function deleteByColumn($table, $column, $value) {
-        $statement = "DELETE FROM $table WHERE `$column` = $value";
+        $statement = "DELETE FROM $table WHERE $where";
         //print $statement;
         return $this->exec($statement);
     }
 
     private function exec($statement)
     {
+
         $db = $this->getInstance();
+        $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$statement)");
         $db->connection->exec($statement);
         return $db->connection->lastInsertId();
     }
     private function query($query)
     {
         $db = $this->getInstance();
+        $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$query)");
         $result = $db->connection->query($query);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         return $result->fetchAll();
