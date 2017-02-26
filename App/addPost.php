@@ -18,7 +18,7 @@ $session->start();
 $session->blockGuest();
 $user = $session ->user;
 
-$blog_post = new Blog_post();
+$blog = new Blog_post();
 
 ?>
 <!DOCTYPE html>

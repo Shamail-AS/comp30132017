@@ -60,7 +60,7 @@ $blogs = $blog->getByUser($user_id);
 
 
         ?>
-        <h4><a href="../addPost.php">Add Post</a></h4>
+        <h4><a href="addPost.php">Add Post</a></h4>
 
 
 </body>
