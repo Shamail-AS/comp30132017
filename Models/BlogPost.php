@@ -20,7 +20,11 @@ class Blog_post extends Model
     }
 
     public function deletePost($id) {
-        return $this->delete($this,$id);
+        return $this->delete($this->table,$id);
 
+    }
+
+    public function updatePost($id, $data) {
+        return $this->update($this->table, $id, $data);
     }
 }

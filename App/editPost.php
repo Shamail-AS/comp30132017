@@ -6,6 +6,8 @@
  * Time: 5:10 PM
  */
 require_once('../Models/BlogPost.php');
+require_once('../Core/SessionManager.php');
+require_once('../Models/User.php');
 
 use Http\Session\SessionManager;
 use Database\Models\Blog_post;
@@ -57,11 +59,8 @@ $b = $blog->find($blog_post_id);
         }
         if(!isset($error)) {
             try{
-                $blog->users = $user->id;
-                $blog->post_title = $_POST['postTitle'];
-                $blog->post_content = $_POST['postCont'];
-                $blog->timestamp =  date('Y-m-d H:i:s');
-                $blog->save();
+                $data = array('post_title' => $_POST['postTitle'], 'post_content' => $_POST['postCont'], 'timestamp' => date('Y-m-d H:i:s'));
+                $b->updatePost($blog_post_id, $data);
 
                 //redirect to blog page
                 header('Location: blog.php?action=updated');
@@ -74,6 +73,19 @@ $b = $blog->find($blog_post_id);
         }
 
         ?>
+
+        <form action='' method='post'>
+            <input type='hidden' name='postID' value='<?php echo $b->id;?>'>
+
+            <p><label>Title</label><br />
+                <input type='text' name='postTitle' value='<?php echo $b->post_title;?>'></p>
+
+            <p><label>Content</label><br />
+                <textarea name='postCont' cols='60' rows='10'><?php echo $b->post_content;?></textarea></p>
+
+            <p><input type='submit' name='submit' value='Update'></p>
+
+        </form>
 
     </div>
 

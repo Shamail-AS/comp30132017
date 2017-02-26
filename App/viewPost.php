@@ -61,7 +61,7 @@ $b = $blog_post->find($blog_post_id);
             echo '</div>';
 
         ?>
-
+        <a href="editPost.php?id=<?php echo $b->id;?>">Edit</a>
         <a href="javascript:delpost('<?php echo $b->id;?>','<?php echo $b->post_title;?>')">Delete</a>
     </div>
 </body>

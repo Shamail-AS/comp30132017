@@ -23,7 +23,13 @@ $user_id = $user->id;
 $blog = new Blog_post();
 $blogs = $blog->getByUser($user_id);
 
+if(isset($_GET['delpost'])){
 
+    $blog->deletePost($_GET['delpost']);
+
+    header('Location: blog.php?action=deleted');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
