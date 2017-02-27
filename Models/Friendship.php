@@ -48,36 +48,41 @@ class Friendship extends Model
         //var_dump($friends);
         $userManager = new User();
         if (count($friends) > 0)
-            $directory = $userManager->whereNotIn(null, 'id', $friendIds); //candidates
+            $directory_users = $userManager->whereNotIn(null, 'id', $friendIds); //candidates
         else
-            $directory = $userManager->all(); //candidates
+            $directory_users = $userManager->all(); //candidates
 
         array_push($friends, $user); //the candidates must be similar to these
 
-        //array_udiff($directory,$friends,'compByIds');
+        //array_udiff($directory_users,$friends,'compByIds');
         $similarUsers = [];
 
-        foreach ($directory as $d_user) { //candidates
+        foreach ($directory_users as $candidate) { //candidates
             $similarity = 0;
             foreach ($friends as $friend) { //friends + me
 
-                //friends + me will also be in the directory users. Skip those
-                if ($friend->id == $d_user->id) continue;
-
-                if ($d_user->birthplace == $friend->birthplace) $similarity++;
-                if ($d_user->work == $friend->birthplace) $similarity++;
-                if ($d_user->school == $friend->school) $similarity++;
-                if ($d_user->university == $friend->university) $similarity++;
-                if ($d_user->sex == $friend->interested_in) $similarity++;
-                if ($d_user->isSameAgeGroupAs($friend)) $similarity++;
-
+                //friends + me will also be in the directory_users of users. Skip those
+                if ($friend->id == $candidate->id) continue;
+                $similarity += $this->getSimilarity($candidate, $friend);
             }
-            $d_user->similarity = $similarity;
-            //var_dump($d_user);
+            $candidate->similarity = $similarity;
+            //var_dump($candidate);
             if ($similarity > self::SIMILARITY_THRESHOLD)
-                array_push($similarUsers, $d_user);
+                array_push($similarUsers, $candidate);
         }
         $fofs = $user->getFriendsOfFriends();
         return array_merge($similarUsers, $fofs);
+    }
+
+    public function getSimilarity($d_user, $friend)
+    {
+        $similarity = 0;
+        if ($d_user->birthplace == $friend->birthplace) $similarity++;
+        if ($d_user->work == $friend->birthplace) $similarity++;
+        if ($d_user->school == $friend->school) $similarity++;
+        if ($d_user->university == $friend->university) $similarity++;
+        if ($d_user->sex == $friend->interested_in) $similarity++;
+        if ($d_user->isSameAgeGroupAs($friend)) $similarity++;
+        return $similarity;
     }
 }

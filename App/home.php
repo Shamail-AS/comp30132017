@@ -71,7 +71,8 @@ $suggestions = $friendship->suggestionsFor($user);
                 <tr>
                     <td><?php echo $friend->name ?></td>
                     <td><?php echo $friend->email ?></td>
-                    <td><a href="#" class="btn btn-sm btn-primary">Profile</a></td>
+                    <td><a href="viewProfile.php?user=<?php echo $friend->id ?>"
+                           class="btn btn-sm btn-primary">Profile</a></td>
                 </tr>
             <?php } ?>
 

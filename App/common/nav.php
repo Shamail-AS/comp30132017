@@ -62,7 +62,7 @@ if ($user == null) {
                 ?>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="#"><?php echo $user->name ?></a>
+                <a class="nav-link " href="viewProfile.php"><?php echo $user->name ?></a>
             </li>
             </li>
             <li class="nav-item">

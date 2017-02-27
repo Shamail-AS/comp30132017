@@ -85,6 +85,20 @@ class User extends Model
         return intval($interval->format("%y"));
     }
 
+    public function sex()
+    {
+        if ($this->sex == 'M') return 'Male';
+        else if ($this->sex == 'F') return 'Female';
+        else return 'Undisclosed';
+    }
+
+    public function interested_in()
+    {
+        if ($this->interested_in == 'M') return 'Male';
+        else if ($this->interested_in == 'F') return 'Female';
+        else return 'Undisclosed';
+    }
+
     public function isSameAgeGroupAs($user)
     {
         return (abs($user->age() - $this->age()) < 5);
