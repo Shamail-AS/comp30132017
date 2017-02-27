@@ -20,6 +20,7 @@ class DB
 
     private static $instance = null;
     private $connection = null;
+    private $build_log = false;
 
     private function __construct($host, $user, $pass, $db)
     {
@@ -80,7 +81,6 @@ class DB
     protected function deleteWhere($table, $where)
     {
         $statement = "DELETE FROM $table WHERE $where";
-        //print $statement;
         return $this->exec($statement);
     }
 
@@ -88,14 +88,20 @@ class DB
     {
 
         $db = $this->getInstance();
-        $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$statement)");
+        if ($this->build_log) {
+            $log = $db->connection->quote($statement);
+            $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$log)");
+        }
         $db->connection->exec($statement);
         return $db->connection->lastInsertId();
     }
     private function query($query)
     {
         $db = $this->getInstance();
-        $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$query)");
+        if ($this->build_log) {
+            $log = $db->connection->quote($query);
+            $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$log)");
+        }
         $result = $db->connection->query($query);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         return $result->fetchAll();

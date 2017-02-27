@@ -28,3 +28,11 @@ This class handles all form validation for POST data.
 For every form that needs to be validated, a new function can be created that
 defines the errors to catch and the messages for those errors.
 The method returns an error array, which can be used to populate errors in the session
+
+##Logging
+
+##sql_log table
+The sql_log table will record all queries that happen through the DB class. The DB class
+has a build_log variable that is set to false by default.
+When you need to log the queries getting executed, change it to true and the logging should happen
+automatically
