@@ -63,7 +63,7 @@ class Model extends DB
 
     public function delete($query = null)
     {
-        if ($this->exists()) {
+        if ($this->exists() || $query != null) {
             $where = $query ?? "`id` = $this->id";
             $result = parent::deleteWhere($this->table, $where);
             return $result;
