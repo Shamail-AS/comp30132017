@@ -36,6 +36,7 @@ $members = $group->getByCircleId($circle_id);
 
 
 
+
 if($session->user->id == $circle->ownerById($circle_id)){
     $isViewingOwn = true;
 }
@@ -154,7 +155,8 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
         <tbody>
         <?php foreach ($members as $m) { ?>
             <tr>
-                <td><?php echo $user->getNameById($m->user) ?></td>
+                <td><?php if($m->user == $circle->ownerById($circle_id)){ echo $user->getNameById($m->user) . " (Admin)";}
+                    else{ echo $user->getNameById($m->user);} ?></td>
                 <td><a href="viewProfile.php?user=<?php echo $m->user ?>"
                        class="btn btn-sm btn-primary">Profile</a></td>
                 <td>

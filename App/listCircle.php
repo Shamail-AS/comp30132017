@@ -35,6 +35,7 @@ $mycircles = $circles->getByUser($user_id);
 
 
 
+
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +60,12 @@ $mycircles = $circles->getByUser($user_id);
 <?php
 if (!empty($mycircles)) {
     foreach ($mycircles as $a) {
-        $myname = $circle->idToName($a->circle);
+        if($circle->ownerById($a->circle) == $user->id){
+            $myname = $circle->idToName($a->circle) . " (Your Circle)";
+        }
+        else {
+            $myname = $circle->idToName($a->circle);
+        }
         echo "<h5><a href=\"viewCircle.php?id=" . $a->circle . "\">$myname</a></h5>";
     }
 }
