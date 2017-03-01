@@ -7,6 +7,7 @@
  */
 namespace Database\Models;
 require_once('../Core/Model.php');
+require_once('../Core/Db.php');
 
 class Circles_Member extends Model
 {
@@ -33,10 +34,8 @@ class Circles_Member extends Model
             $connected = false;
         }
         return $connected;
-
-
-
     }
+
 }
 
 

@@ -28,5 +28,11 @@ class Circle extends Model
 
     }
 
+    public function ownerById($id){
+        $circle = new Circle();
+        $c = $circle->find($id);
+        return $c->owner;
+    }
+
 
 }
