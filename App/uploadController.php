@@ -13,7 +13,7 @@ function pr($data)
 }
 if (isset($_POST) && !empty($_POST)) {
     pr($_POST);
-    pr($_FILES['fileToUpload']);
+    //pr($_FILES['fileToUpload']);
     //move_uploaded_file($_FILES['fileToUpload']['tmp_name'], 'uploads/' . $_FILES['fileToUpload']['tmp_name']);
 }
 ?>

@@ -20,6 +20,11 @@ class Album extends Model
         return (count($result) != 0);
     }
 
+    public function getByID($id) {
+        $result = parent::findByColumn("id", $id);
+        return $result[0];
+    }
+
     public function getByUser($user_id) {
         $rows = parent::findByColumn("user_id", $user_id);
         return $rows;
@@ -35,7 +40,6 @@ class Album extends Model
 
     public function assignToCircle($album_id, $circle_id) {
         $sql = "INSERT INTO circle_album (circle, album) VALUES ($circle_id, $album_id)";
-        //$sql = "INSERT INTO circle_album (circle, album) VALUES (581, 141)";
         $result = parent::raw($sql);
         echo $result;
     }
@@ -47,5 +51,17 @@ class Album extends Model
         $latest_album = intval($result[0]->latest_id);
 
         $this->assignToCircle($latest_album, $circle_id);
+    }
+
+    public function getAssignedCircle($album_id) {
+        $sql = "SELECT circle FROM circle_album WHERE `album` = " . $album_id;
+        $result = parent::raw($sql);
+        return $result;
+    }
+
+    public function delWithCircle($album_id, $circle_id) {
+        $sql = "DELETE FROM circle_album WHERE `circle` = " . $circle_id . " AND `album` = " .$album_id ;
+        $result = parent::raw($sql);
+        echo $result;
     }
 }

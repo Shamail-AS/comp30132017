@@ -30,12 +30,6 @@ $circle = new Circle();
 $circles = new Circles_Member();
 $mycircles = $circles->getByUser($user_id);
 
-
-
-
-
-
-
 ?>
 
 <!DOCTYPE html>
