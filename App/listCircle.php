@@ -52,11 +52,13 @@ $mycircles = $circles->getByUser($user_id);
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <div align = center><h1>Circles</h1></div>
 </head>
-
 <body>
-
+<div class = container>
+<ul>
 <?php include('common/nav.php') ?>
+<ul class="list-group"></ul>
 <?php
 if (!empty($mycircles)) {
     foreach ($mycircles as $a) {
@@ -66,16 +68,18 @@ if (!empty($mycircles)) {
         else {
             $myname = $circle->idToName($a->circle);
         }
-        echo "<h5><a href=\"viewCircle.php?id=" . $a->circle . "\">$myname</a></h5>";
+        echo "<div align = center><a href=\"viewCircle.php?id=" . $a->circle . "\"><li class=\"list-group-item\">$myname</li></a>";
     }
 }
 else {
     echo "You have no circles";
 }
 ?>
+</ul>
+</div>
 
-<div align = center><h4><a href = "createCircle.php">Create New Circle</h4></div>
-
+<div align = center><a href = "createCircle.php"><button class="btn btn-primary">Create New Circle</button></a></div>
+</div>
 
 
 
