@@ -128,14 +128,19 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
 
 <div class = container>
 
-    <div align = right>
+    <div style="align:right; float:right; position: relative; display:inline">
+        <?php
+            $createLink = "createAlbumCircle.php?id=" . $circle_id;
+            echo "<a href='" . $createLink . "''
+           class=\"btn btn-sm btn-primary\">Create Album</a>";
+        ?>
         <?php if ($isViewingOwn) { ?>
-            <form class="form-outline" method="post" action="#" name = "disband_group">
+            <form class="form-outline" method="post" action="#" name = "disband_group" style="display:inline-block">
                 <input type="hidden" name="disband_group" value = "disband_group">
                 <button class="btn btn-sm btn-primary" type="submit">Disband Group</button>
             </form>
         <?php }else{ ?>
-            <form class="form-outline" method="post" action="#" name = "leave_group">
+            <form class="form-outline" method="post" action="#" name = "leave_group" style="display:inline-block">
                 <input type="hidden" name="leave_group" value = "leave_group">
                 <button class="btn btn-sm btn-primary" type="submit">Leave Group</button>
             </form>

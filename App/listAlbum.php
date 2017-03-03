@@ -76,7 +76,9 @@ function pr($data)
         $name = $u->getNameById($user_id);
         echo "<h1>All Album By " . $name . "</h1>"
         ?>
-        <h5><a href= "home.php">Back To Home</a></h5>
+        <a href="createAlbum.php"
+           class="btn btn-md btn-primary">Create Album</a>
+        <br>
     </div>
     <div>
         <?php
