@@ -11,6 +11,12 @@ require_once('../Core/Validator.php');
 require_once('../Models/Privacy.php');
 require_once('../Models/User.php');
 require_once('../Models/Image.php');
+require_once "../vendor/autoload.php";
+
+use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
+use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
+use MicrosoftAzure\Storage\Common\ServicesBuilder;
+use MicrosoftAzure\Storage\Common\ServiceException;
 
 use Database\Models\Image;
 use Database\Models\Privacy;
@@ -24,9 +30,13 @@ $session->start();
 $session->blockGuest();
 $user = $session->user;
 
+$connectionString = 'DefaultEndpointsProtocol=https;AccountName=comp3013blob;AccountKey=cQ91zOw8c2DHjQLliApm/5ppXk8zNe12EvCtgfoUhR7erbSGO0ZLwvMNT3P5A/sIfGSALBXvO/5UxvZEixqJZw==;';
+$blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
+
 $album = new Album();
 $optList = $album->getByUser($user->id);
  if (isset($_POST) && !empty($_POST)) {
+     pr($_FILES);
      $validator = new Validator();
      $errors = $validator->validateUserRegistrationData($_POST);
      if (count($errors) > 0) {
@@ -47,16 +57,30 @@ $optList = $album->getByUser($user->id);
              $session->addError("file", "Invalid Extension");
              $session->redirect('uploadImage');
          }
-         $home = realpath(dirname(__FILE__));
-         $target_dir = "/upload/";
-         $target_file = $home . $target_dir . basename($_FILES["fileToUpload"]["name"]);
+
+         // Create blob REST proxy.
+         $blobRestProxy = ServicesBuilder::getInstance()->createBlobService($connectionString);
+         $content = fopen($_FILES["fileToUpload"]["tmp_name"], "r");
+         $blob_name = $_FILES["fileToUpload"]["name"];
+
+         try    {
+             //Upload blob
+             $blobRestProxy->createBlockBlob("mycontainer", $blob_name, $content);
+         }
+         catch(ServiceException $e){
+             // Handle exception based on error codes and messages.
+             // Error codes and messages are here:
+             // http://msdn.microsoft.com/library/azure/dd179439.aspx
+             $code = $e->getCode();
+             $error_message = $e->getMessage();
+             echo $code.": ".$error_message."<br />";
+         }
 
          $image = new Image();
          $image->name = $_POST['title'];
          $image->description = $_POST['content'];
          $image->album_id = $_POST['selAlbum'];
-         $image->URL = "upload/" . $_FILES["fileToUpload"]["name"];
-         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],  $target_file);
+         $image->URL = "https://comp3013blob.blob.core.windows.net/mycontainer/" . $_FILES["fileToUpload"]["name"];
          $image->save();
          $newURL = "viewAlbum.php?id=" . $_POST['selAlbum'];
          header('Location: '. $newURL);
