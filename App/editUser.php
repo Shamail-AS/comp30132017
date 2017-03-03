@@ -16,14 +16,15 @@ use Http\Session\SessionManager;
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
-if ($user->usertype != "ADMIN") {
-    $session->redirect(home);
-}
+
 
 $user_id = $_GET['id'];
 $user = new User();
 $u = $user->getUserById($user_id);
-
+$user = $session->user;
+if ($user->usertype != "ADMIN") {
+    $session->redirect(home);
+}
 if (isset($_POST) && !empty($_POST)) {
     $validator = new Validator();
     $errors = $validator->validateUserRegistrationData($_POST);
