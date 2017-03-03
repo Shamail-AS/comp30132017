@@ -27,11 +27,39 @@ $user = $session->user;
 $album = new Album();
 $optList = $album->getByUser($user->id);
  if (isset($_POST) && !empty($_POST)) {
-     if ( 0 < $_FILES['file']['error'] ) {
-         echo 'Error: ' . $_FILES['file']['error'] . '<br>';
+     $validator = new Validator();
+     $errors = $validator->validateUserRegistrationData($_POST);
+     if (count($errors) > 0) {
+     foreach ($errors as $key => $value) {
+         $session->addError($key, $value);
      }
-     else {
-         move_uploaded_file($_FILES['file']['tmp_name'], 'uploads/' . $_FILES['file']['name']);
+     if ($session->hasErrors()) {
+         $session->redirect('uploadImage');
+     }
+     } else {
+         if ($_FILES["fileToUpload"]["size"] > 500000) {
+             $session->addError("file", "File is too large");
+             $session->redirect('uploadImage');
+         }
+         // Allow certain file formats
+         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+             && $imageFileType != "gif" ) {
+             $session->addError("file", "Invalid Extension");
+             $session->redirect('uploadImage');
+         }
+         $home = realpath(dirname(__FILE__));
+         $target_dir = "/upload/";
+         $target_file = $home . $target_dir . basename($_FILES["fileToUpload"]["name"]);
+
+         $image = new Image();
+         $image->name = $_POST['title'];
+         $image->description = $_POST['content'];
+         $image->album_id = $_POST['selAlbum'];
+         $image->URL = "upload/" . $_FILES["fileToUpload"]["name"];
+         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],  $target_file);
+         $image->save();
+         $newURL = "viewAlbum.php?id=" . $_POST['selAlbum'];
+         header('Location: '. $newURL);
      }
  }
 function pr($data)
@@ -75,12 +103,12 @@ function pr($data)
                 </div>
             </div>
             <div class="form-group">
-                <select id="selAlbum" class="form-control" name="selAlbum" title="Select">
+                <select class="form-control" name="selAlbum" title="Select">
                     <option>Select Album</option>
                     <?php
                     foreach ($optList as $opt)
                     {
-                        echo "<option id = $opt->id>".$opt->name."</option>";
+                        echo "<option value = $opt->id>".$opt->name."</option>";
                     }
                     ?>
                 </select>

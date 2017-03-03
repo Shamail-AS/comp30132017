@@ -70,6 +70,9 @@ if ($user == null) {
             <li class="nav-item">
                 <a class="nav-link" href="listCircle.php">My Circles</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="uploadImage.php">Upload Image</a>
+            </li>
             <?php
             if ($user != null && $user->usertype == "ADMIN") {
                 echo "<li class=\"nav-item\">";
