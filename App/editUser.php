@@ -16,6 +16,9 @@ use Http\Session\SessionManager;
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
+if ($user->usertype != "ADMIN") {
+    $session->redirect(home);
+}
 
 $user_id = $_GET['id'];
 $user = new User();
@@ -32,10 +35,35 @@ if (isset($_POST) && !empty($_POST)) {
     //var_dump($session->errors());
     if ($session->hasErrors()) {
     //add redirection back to form
-    $session->redirect('editUser');
+    $session->redirect('editUser?id='.$user_id);
     //var_dump($session->errors());
     } else {
-        pr($_POST);
+        $u->name = $_POST['name'];
+        $u->email = $_POST['email'];
+        if ($_POST['selSex'] == "Female") {
+            $u->sex = "F";
+        } elseif ($_POST['selSex'] == "Male") {
+            $u->sex = "M";
+        } else {
+            $session->addError('sex', 'Invalid Gender');
+            $session->redirect('editUser?id='.$user_id);
+        }
+
+        if ($_POST['selUserType'] == "ADMIN") {
+            $u->usertype = "ADMIN";
+        } elseif ($_POST['selUserType'] == "USER") {
+            $u->usertype = "USER";
+        } else {
+            $session->addError('usertype', 'Invalid User Type');
+            $session->redirect('editUser?id='.$user_id);
+        }
+
+        $u->birthplace = $_POST['birthplace'];
+        $u->work = $_POST['work'];
+        $u->school = $_POST['school'];
+        $u->dob = $_POST['dob'];
+        $u->university = $_POST['university'];
+        $u->save();
     }
 }
 
@@ -83,8 +111,9 @@ function pr($data)
                 <div>
                     <label>Name</label>
                     <?php if ($session->hasErrors() && $session->getError("name")) {
-                    $error_msg = $session->getError("name"); }
-                    ?>
+                    $error_msg = $session->getError("name");                     ?>
+                        <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                    <?php } ?>
                     <input type="text" class="form-control" id="name"
                            placeholder="Name" name="name" required="">
                 </div>
@@ -93,8 +122,9 @@ function pr($data)
                 <div>
                     <label>Email</label>
                     <?php if ($session->hasErrors() && $session->getError("email")) {
-                    $error_msg = $session->getError("email"); }
-                    ?>
+                    $error_msg = $session->getError("email");                    ?>
+                        <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                    <?php } ?>
                     <input type="text" class="form-control" id="email"
                            placeholder="Email" name="email" required="">
                 </div>
@@ -102,8 +132,9 @@ function pr($data)
             <div class="form-group">
                 <label>Gender</label>
                 <?php if ($session->hasErrors() && $session->getError("sex")) {
-                    $error_msg = $session->getError("sex"); }
-                ?>
+                    $error_msg = $session->getError("sex");                 ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <select id="selSex" class="form-control" name="selSex" title="Select">
                     <option>Select Gender</option>
                     <option value = "Male">Male</option>
@@ -113,8 +144,9 @@ function pr($data)
             <div class="form-group">
                 <label>User Type</label>
                 <?php if ($session->hasErrors() && $session->getError("usertype")) {
-                $error_msg = $session->getError("usertype"); }
-                ?>
+                $error_msg = $session->getError("usertype"); ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <select id="selUserType" class="form-control" name="selUserType" title="Select">
                     <option>Select User Type</option>
                     <option value = "USER">USER</option>
@@ -124,8 +156,9 @@ function pr($data)
             <div class="form-group">
                 <label>Birthplace</label>
                 <?php if ($session->hasErrors() && $session->getError("birthplace")) {
-                $error_msg = $session->getError("birthplace"); }
-                ?>
+                $error_msg = $session->getError("birthplace");                 ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <div>
                     <input type="text" class="form-control" id="birthplace"
                            placeholder="Birthplace" name="birthplace" required="">
@@ -134,8 +167,9 @@ function pr($data)
             <div class="form-group">
                 <label>Workplace</label>
                 <?php if ($session->hasErrors() && $session->getError("workplace")) {
-                $error_msg = $session->getError("workplace"); }
-                ?>
+                $error_msg = $session->getError("workplace");                 ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <div>
                     <input type="text" class="form-control" id="work"
                            placeholder="Work" name="work" required="">
@@ -144,8 +178,9 @@ function pr($data)
             <div class="form-group">
                 <label>School</label>
                 <?php if ($session->hasErrors() && $session->getError("school")) {
-                $error_msg = $session->getError("school"); }
-                ?>
+                $error_msg = $session->getError("school");                 ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <div>
                     <input type="text" class="form-control" id="school"
                            placeholder="School" name="school" required="">
@@ -154,18 +189,20 @@ function pr($data)
             <div class="form-group">
                 <label>Date Of Birth</label>
                 <?php if ($session->hasErrors() && $session->getError("dob")) {
-                $error_msg = $session->getError("dob"); }
-                ?>
+                $error_msg = $session->getError("dob");                 ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <div>
                     <input type="text" class="form-control" id="dob"
-                           placeholder="Date Of Birth" name="dob" required="">
+                           placeholder="Date Of Birth YYYY-mm-DD" name="dob" required="">
                 </div>
             </div>
             <div class="form-group">
                 <label>University</label>
                 <?php if ($session->hasErrors() && $session->getError("university")) {
-                $error_msg = $session->getError("university");}
-                ?>
+                $error_msg = $session->getError("university");                ?>
+                    <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                <?php } ?>
                 <div>
                     <input type="text" class="form-control" id="university"
                            placeholder="University" name="university" required="">

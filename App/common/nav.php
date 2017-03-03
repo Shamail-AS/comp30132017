@@ -13,9 +13,11 @@ use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $user = $session->user;
+
 if ($user == null) {
     $user = new User();
     $user->name = "Guest";
+} else {
 }
 ?>
 <style>
@@ -68,7 +70,13 @@ if ($user == null) {
             <li class="nav-item">
                 <a class="nav-link" href="listCircle.php">My Circles</a>
             </li>
-            <li class="nav-item">
+            <?php
+            if ($user != null && $user->usertype == "ADMIN") {
+                echo "<li class=\"nav-item\">";
+                echo "<a class=\"nav-link\" href=\"admin.php\">Admin</a>";
+                echo "</li>";
+            }
+            ?>
         </ul>
         <!--        <form class="form-inline mt-2 mt-md-0">-->
         <!--            <input class="form-control mr-sm-2" type="text" placeholder="Search">-->

@@ -15,6 +15,9 @@ $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 $user = $session->user;
+if ($user->usertype != "ADMIN") {
+    $session->redirect(home);
+}
 $user = new User();
 $allUser = $user->all();
 
