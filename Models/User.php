@@ -115,7 +115,4 @@ class User extends Model
             'all' => array_merge($received, $sent)
         ];
     }
-
-
-
 }
