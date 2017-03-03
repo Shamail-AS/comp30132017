@@ -30,6 +30,12 @@ class Album extends Model
         return $rows;
     }
 
+    public function getAlbumByCircleID($circle_id) {
+        $sql = "SELECT DISTINCT a.id, a.user_id, a.name FROM circle_album as c, albums as a WHERE c.circle = " . $circle_id . " AND c.album = a.id";
+        $result = parent::raw($sql);
+        return $result;
+    }
+
     public function isOwned($user_id) {
         if ($this->user_id == $user_id) {
             return true;

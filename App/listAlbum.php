@@ -2,11 +2,13 @@
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
 require_once('../Models/Album.php');
+require_once('../Models/Circles_Member.php');
 
 use Database\Models\Image;
 use Database\Models\User;
 use Database\Models\Album;
 use Http\Session\SessionManager;
+use Database\Models\Circles_Member;
 
 $session = new SessionManager();
 $session->start();
@@ -67,7 +69,7 @@ function pr($data)
 <body>
 
 <?php include('common/nav.php') ?>
-<div class="container">
+<div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%" class="container">
     <div class="starter-template">
         <?php
         $url = "viewAlbum.php?id=" . $user_id;
@@ -81,7 +83,7 @@ function pr($data)
         };
         ?>
     </div>
-    <div>
+    <p>
         <?php
         $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
         if (!empty($albums)) {
@@ -100,8 +102,38 @@ function pr($data)
             echo "No Album";
         }
         ?>
-
+    </p>
+</div>
+<div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%" class="container">
+    <div >
+        <?php
+        echo "<h1>All album shared by group</h1>";
+        ?>
     </div>
+    <p>
+        <?php
+        $sharedAlbum = new Album();
+        $circles = new Circles_Member();
+        $mycircles = $circles->getByUser($user->id);
+        foreach ($mycircles as $c) {
+            //if ($c->user != $user_id) {
+            $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+            foreach ($sharedAlbums as $s) {
+                if ($s->user_id != $user_id) {
+                    $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
+                    echo "                <li class=\"photo-box\">
+                    <div class=\"image-wrap\">
+                        <img src=" . $thumbnail . ">
+                    </div>
+                    <div class=\"description\">
+                        <h5><a href=\"viewAlbum.php?id=" . $s->id . "\">" . $s->name . "</a></h5>
+                    </div>
+                    </li>";
+                }
+            }
+        }
+        ?>
+    </p>
 </div>
 
 
