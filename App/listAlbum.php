@@ -12,7 +12,6 @@ $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 $user = $session->user;
-$user = new User();
 
 if (!isset($_GET['user'])) {
     // Fallback behaviour goes here
@@ -74,11 +73,13 @@ function pr($data)
         $url = "viewAlbum.php?id=" . $user_id;
         $u = new User();
         $name = $u->getNameById($user_id);
-        echo "<h1>All Album By " . $name . "</h1>"
+        echo "<h1>All Album By " . $name . "</h1>";
+
+        if ($user_id == $user->id) {
+            echo '<a href="createAlbum.php"
+           class="btn btn-md btn-primary">Create Album</a><br>';
+        };
         ?>
-        <a href="createAlbum.php"
-           class="btn btn-md btn-primary">Create Album</a>
-        <br>
     </div>
     <div>
         <?php

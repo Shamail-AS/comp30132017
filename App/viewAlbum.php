@@ -81,9 +81,11 @@ function pr($data)
                 echo "<h6><a href= ". $url . ">Show All Album By " . $name . "</a></h6>";
                 ?>
                 <?php
-                echo '<a href="editAlbum.php?id=' . $album_id .
-                   '" class="btn btn-md btn-primary">Edit Album</a>';
-                echo '<br>';
+                if ($user->id == $a->user_id) {
+                    echo '<a href="editAlbum.php?id=' . $album_id .
+                        '" class="btn btn-md btn-primary">Edit Album</a>';
+                    echo '<br>';
+                };
                 ?>
             </div>
             <div>
