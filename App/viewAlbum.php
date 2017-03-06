@@ -94,7 +94,7 @@ function pr($data)
                     foreach ($images as $i) {
                         echo "                <li class=\"photo-box\">
                     <div class=\"image-wrap\">
-                        <img src=" . $i->URL . ">
+                        <img src=\"$i->URL\">
                     </div>
                     <div class=\"description\">
                         <h5><a href=\"viewImage.php?id=" . $i->id . "\">" . $i->name . "</a></h5>
