@@ -136,16 +136,21 @@ function pr($data)
                     {
                         echo "<option value = $opt->id>".$opt->name."</option>";
                     }
-
+                    
                     $sharedAlbum = new Album();
                     $circles = new Circles_Member();
                     $mycircles = $circles->getByUser($user->id);
-                    foreach ($mycircles as $c) {
-                        //if ($c->user != $user_id) {
-                        $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
-                        foreach ($sharedAlbums as $s) {
-                            if ($s->user_id != $user_id) {
-                                echo "<option value = $s->id>".$s->name."</option>";
+                    if (count($mycircles) > 0) {
+                        echo "<option style='font-weight: bold; padding: 6px;' disabled=\"disabled\">-----------------------------------</option>";
+                        echo "<option style='font-weight: bold; padding: 6px;' disabled=\"disabled\">Album Shared By Circles</option>";
+                        echo "<option style='font-weight: bold; padding: 6px;' disabled=\"disabled\">-----------------------------------</option>";
+                        foreach ($mycircles as $c) {
+                            //if ($c->user != $user_id) {
+                            $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+                            foreach ($sharedAlbums as $s) {
+                                if ($s->user_id != $user_id) {
+                                    echo "<option value = $s->id>" . $s->name . "</option>";
+                                }
                             }
                         }
                     }
