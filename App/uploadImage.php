@@ -12,6 +12,7 @@ require_once('../Models/Privacy.php');
 require_once('../Models/User.php');
 require_once('../Models/Image.php');
 require_once "../vendor/autoload.php";
+ require_once('../Models/Circles_Member.php');
 
 use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
 use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
@@ -24,6 +25,7 @@ use Http\Forms\Validator;
 use Http\Session\SessionManager;
 use Database\Models\Album;
 use Database\Models\User;
+use Database\Models\Circles_Member;
 
 $session = new SessionManager();
 $session->start();
@@ -133,6 +135,19 @@ function pr($data)
                     foreach ($optList as $opt)
                     {
                         echo "<option value = $opt->id>".$opt->name."</option>";
+                    }
+
+                    $sharedAlbum = new Album();
+                    $circles = new Circles_Member();
+                    $mycircles = $circles->getByUser($user->id);
+                    foreach ($mycircles as $c) {
+                        //if ($c->user != $user_id) {
+                        $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+                        foreach ($sharedAlbums as $s) {
+                            if ($s->user_id != $user_id) {
+                                echo "<option value = $s->id>".$s->name."</option>";
+                            }
+                        }
                     }
                     ?>
                 </select>
