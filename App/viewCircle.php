@@ -93,10 +93,13 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
     }
 } else if (isset($_POST["disband_group"]) && !empty($_POST["disband_group"])) {
 
+    $chat->delete("circle = $circle_id");
     foreach ($members as $m){
         $group->delete("user = $m->user  AND circle = $circle_id");
     }
+
     $circle->delete("id = $circle_id");
+
     $session->redirect("listCircle.php");
 
 
@@ -174,7 +177,7 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
             <tbody>
             <?php if($msgs != NULL){foreach ($msgs as $m) { ?>
             <tr>
-                <td><?php echo $user->getNameByID($m->from_user);?></td>
+                <td><?php echo $user->getNameByID($m->from_user) . ":";?></td>
                 <td><?php echo $m->message;?></td>
                 <td><?php echo $m->timestamp;?></td>
                 <?php }}else{echo "Nobody has posted here yet";} ?>
