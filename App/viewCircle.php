@@ -10,10 +10,13 @@ require_once('../Models/Circles_Member.php');
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
 require_once('../Models/Friendship.php');
+require_once('../Models/Messages.php');
+
 
 use Database\Models\Circle;
 use Http\Session\SessionManager;
 use Database\Models\Circles_Member;
+use Database\Models\Messages;
 use Database\Models\Friendship;
 
 $session = new SessionManager();
@@ -33,6 +36,9 @@ $circle = new Circle();
 $name = $circle->idToName($circle_id);
 $group = new Circles_Member();
 $members = $group->getByCircleId($circle_id);
+$chat = new Messages();
+$msgs = $chat->getCircleMSG($circle_id);
+
 
 
 
@@ -47,7 +53,7 @@ else{
 
 
 if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset($_POST["disband_group"])
-&& !isset($_POST["leave_group"])) {
+&& !isset($_POST["leave_group"]) && !isset($_POST["group_chat"])) {
     $friend_name = $_POST['user'];
     if (!$user->isRegistered($friend_name)) {
         $session->addError('noUser', 'This user does not exist');
@@ -99,6 +105,16 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
     $group->delete("user = $user->id  AND circle = $circle_id");
     $session->redirect("listCircle.php");
 
+} else if (isset($_POST["group_chat"]) && !empty($_POST["group_chat"])) {
+
+    $msg = $_POST['group_chat'];
+    $chat->message = $msg;
+    $chat->circle = $circle_id;
+    $chat->from_user = $user->id;
+    $chat->save();
+    $session->redirect("#");
+
+
 }
 
 
@@ -142,11 +158,40 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
         <?php }else{ ?>
             <form class="form-outline" method="post" action="#" name = "leave_group" style="display:inline-block">
                 <input type="hidden" name="leave_group" value = "leave_group">
-                <button class="btn btn-sm btn-primary" type="submit">Leave Group</button>
+                <button class="btn btn-sm btn-danger" type="submit">Leave Group</button>
             </form>
         <?php } ?>
     </div>
 
+
+        <h5>Group Chat</h5>
+        <div align = "center">
+        <div style="height:360px;width:560px;
+        border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+        <table class = "table container">
+            <thead>
+            </thead>
+            <tbody>
+            <?php if($msgs != NULL){foreach ($msgs as $m) { ?>
+            <tr>
+                <td><?php echo $user->getNameByID($m->from_user);?></td>
+                <td><?php echo $m->message;?></td>
+                <td><?php echo $m->timestamp;?></td>
+                <?php }}else{echo "Nobody has posted here yet";} ?>
+            </tbody>
+        </table>
+        </div>
+        </div>
+        <p></p>
+        <form method="post" name = "group_chat">
+            <div align = "center">
+            <textarea class = "form-control" rows = "4" name = "group_chat"></textarea>
+                <p></p>
+            <button class="btn btn-accept" type="submit">Send</button>
+
+            </div>
+        </form>
+        <p></p>
 
     <h3>List of members</h3>
     <table class="table table-striped">
@@ -206,4 +251,3 @@ if (isset($_POST) && !empty($_POST) && !isset($_POST["delete_admin"]) && !isset(
 </div>
 </body>
 </html>
-

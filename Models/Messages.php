@@ -13,4 +13,17 @@ require_once('../Core/Db.php');
 class Messages extends Model
 {
     protected $table = 'messages';
+
+    function getCircleMSG($circle_id) {
+        $rows = parent::findByColumn("circle", $circle_id);
+        return $rows;
+    }
+
+
+
+
+
+
+
 }
+
