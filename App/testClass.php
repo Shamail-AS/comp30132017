@@ -13,9 +13,18 @@ use Database\Models\User;
 
 
 $user = new User();
-$u = $user->find(1);
-$friendship = new Friendship();
-//$f = $friendship->find(1);
-$friendship->delete("id = 11");
+$u = $user->find(11);
 
 
+highlight_string(var_export($u, true));
+
+$u->name = $u->name."q";
+
+
+
+//$u->save();
+
+
+$u = $user->find(11);
+
+highlight_string(var_export($u, true));

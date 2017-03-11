@@ -85,7 +85,7 @@ $optList = $album->getByUser($user->id);
          $image->URL = "https://comp3013blob.blob.core.windows.net/mycontainer/" . $_FILES["fileToUpload"]["name"];
          $image->save();
          $newURL = "viewAlbum.php?id=" . $_POST['selAlbum'];
-         header('Location: '. $newURL);
+         $session->redirect($newURL);
      }
  }
 function pr($data)

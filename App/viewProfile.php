@@ -50,7 +50,7 @@ if (isset($_GET) && !empty($_GET)) {
 
 <?php include('common/nav.php') ?>
 <div class="container">
-    <h1>Profile Details</h1>
+    <h1>Profile Details <a class="badge badge-info" href="editProfile.php">Edit</a></h1>
     <hr>
     <div class="row">
         <div class="col-md-6">
@@ -77,7 +77,10 @@ if (isset($_GET) && !empty($_GET)) {
         </div>
         <div class="col-md-6">
             <img height="320px"
-                 src="http://esq.h-cdn.co/assets/15/37/980x490/landscape-1441711326-sam-smith-spectre-song.jpg">
+                 src="<?php echo $view_user->profilePic()->URL ?>">
+            <?php if($view_user->profilePic()->URL == null){ ?>
+            <div class="alert alert-warning">No profile picture yet</div>
+            <?php } ?>
         </div>
     </div>
 

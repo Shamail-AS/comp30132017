@@ -7,8 +7,10 @@
  */
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
+require_once('../Models/Album.php');
 require_once('../Core/Validator.php');
 
+use Database\Models\Album;
 use Database\Models\User;
 use Http\Forms\Validator;
 use Http\Session\SessionManager;
@@ -40,11 +42,18 @@ if (isset($_POST) && !empty($_POST)) {
             $session->redirect('register');
         } else {
             $user->save();
-            var_dump($user);
             if (!$user->exists()) {
                 $session->addError('save', 'Could not save user');
                 $session->redirect('register');
             } else {
+
+                $album = new Album();
+                $album->name = 'Profile pictures';
+                $album->user_id = $user->id;
+                $album->privacy_level = $privacy->getIdByName(($_POST['Public']));
+                $album->save();
+
+
                 //redirect to home page because user has logged in
                 $session->redirect('home');
             }
