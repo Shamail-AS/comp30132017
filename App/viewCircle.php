@@ -40,7 +40,9 @@ $chat = new Messages();
 $msgs = $chat->getCircleMSG($circle_id);
 
 
-
+if($group->areConnected($user->id,$circle_id) == False){
+    $session->redirect('home');
+}
 
 
 if($session->user->id == $circle->ownerById($circle_id)){
