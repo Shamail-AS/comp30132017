@@ -38,7 +38,7 @@ $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionStrin
 $album = new Album();
 $optList = $album->getByUser($user->id);
  if (isset($_POST) && !empty($_POST)) {
-     pr($_FILES);
+     //pr($_FILES);
      $validator = new Validator();
      $errors = $validator->validateUserRegistrationData($_POST);
      if (count($errors) > 0) {
@@ -50,13 +50,15 @@ $optList = $album->getByUser($user->id);
      }
      } else {
          if ($_FILES["fileToUpload"]["size"] > 500000) {
-             $session->addError("file", "File is too large");
+             $session->addError("imgSize", "File is too large");
              $session->redirect('uploadImage');
          }
+         $imageFileType = pathinfo($_FILES["fileToUpload"]["name"],PATHINFO_EXTENSION);
+         //pr($imageFileType);
          // Allow certain file formats
          if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
              && $imageFileType != "gif" ) {
-             $session->addError("file", "Invalid Extension");
+             $session->addError("imgExt", "Invalid Extension");
              $session->redirect('uploadImage');
          }
 
@@ -124,6 +126,16 @@ function pr($data)
         <form action="uploadImage.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <div>
+                    <?php if ($session->hasErrors() && $session->getError("imgSize")) {
+                        $error_msg = $session->getError("imgSize");
+                        ?>
+                        <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                    <?php } ?>
+                    <?php if ($session->hasErrors() && $session->getError("imgExt")) {
+                        $error_msg = $session->getError("imgExt");
+                        ?>
+                        <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                    <?php } ?>
                     <input type="text" class="form-control" id="name"
                            placeholder="Name" name="title" required="">
                 </div>
