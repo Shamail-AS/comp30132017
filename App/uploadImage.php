@@ -136,7 +136,6 @@ function pr($data)
                     {
                         echo "<option value = $opt->id>".$opt->name."</option>";
                     }
-                    
                     $sharedAlbum = new Album();
                     $circles = new Circles_Member();
                     $mycircles = $circles->getByUser($user->id);
