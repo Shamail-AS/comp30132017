@@ -29,8 +29,15 @@ $suggestions = $user->getFriendsOfFriends();
 
 $friendship = new Friendship();
 $suggestions = $friendship->suggestionsFor($user);
-//var_dump($suggestions_extra);
 
+if (isset($_POST) && !empty($_POST)) {
+    $user->search_privacy = $_POST['search_privacy'];
+    $user->profile_privacy = $_POST['profile_privacy'];
+    $user->connection_privacy = $_POST['connection_privacy'];
+    $user->save();
+    $session->user = $user;
+    $session->redirect('home');
+}
 
 ?>
 
@@ -53,8 +60,53 @@ $suggestions = $friendship->suggestionsFor($user);
 
 <?php include('common/nav.php') ?>
 <div class="container">
-    <h1>Your friends</h1>
+    <h1>Privacy settings</h1>
+    <hr>
+    <form class="form" action="home.php" method="post">
+        <div class="form-group">
+            <label>Search privacy</label>
+            <select id="search_p" class="form-control" name="search_privacy" title="Select">
 
+                <option <?php echo ($user->search_privacy == 1) ? 'selected' : '' ?> value="1">Public</option>
+                <option <?php echo ($user->search_privacy == 2) ? 'selected' : '' ?> value="2">Friends and Friends of
+                    Friends
+                </option>
+                <option <?php echo ($user->search_privacy == 3) ? 'selected' : '' ?> value="3">Only Friends</option>
+                <option <?php echo ($user->search_privacy == 4) ? 'selected' : '' ?> value="4">Just me (Private)
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Profile privacy</label>
+            <select id="search_p" class="form-control" name="profile_privacy" title="Select">
+
+                <option <?php echo ($user->profile_privacy == 1) ? 'selected' : '' ?> value="1">Public</option>
+                <option <?php echo ($user->profile_privacy == 2) ? 'selected' : '' ?> value="2">Friends and Friends of
+                    Friends
+                </option>
+                <option <?php echo ($user->profile_privacy == 3) ? 'selected' : '' ?> value="3">Only Friends</option>
+                <option <?php echo ($user->profile_privacy == 4) ? 'selected' : '' ?> value="4">Just me (Private)
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Connection request privacy</label>
+            <select id="search_p" class="form-control" name="connection_privacy" title="Select">
+
+                <option <?php echo ($user->connection_privacy == 1) ? 'selected' : '' ?> value="1">Public</option>
+                <option <?php echo ($user->connection_privacy == 2) ? 'selected' : '' ?> value="2">Friends and Friends
+                    of Friends
+                </option>
+                <option <?php echo ($user->connection_privacy == 3) ? 'selected' : '' ?> value="3">Only Friends</option>
+                <option <?php echo ($user->connection_privacy == 4) ? 'selected' : '' ?> value="4">Just me (Private)
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" title="Save">Save</button>
+    </form>
+    <br><br>
+    <h1>Your friends</h1>
+    <hr>
     <?php if (count($friendships) == 0) { ?>
         <div class="alert alert-info">No friends</div>
     <?php } else {
@@ -83,9 +135,9 @@ $suggestions = $friendship->suggestionsFor($user);
         </table>
 
     <?php } ?>
-
+    <br><br>
     <h1>Suggested friends</h1>
-
+    <hr>
     <?php if (count($suggestions) == 0) { ?>
         <div class="alert alert-info">No friends</div>
     <?php } else {
@@ -116,7 +168,7 @@ $suggestions = $friendship->suggestionsFor($user);
         </ul>
 
     <?php } ?>
-
+    <br><br>
 
 </div>
 
