@@ -16,6 +16,8 @@ use Database\Models\User;
 
 $session = new SessionManager();
 $session->start();
+$session->blockGuest();
+
 $user = $session ->user;
 
 $user_id = $user->id;

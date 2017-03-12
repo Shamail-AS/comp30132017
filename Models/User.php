@@ -43,10 +43,10 @@ class User extends Model
     public function getFriendsOfFriends()
     {
         $sql = "SELECT * from users where id in(
-                SELECT user2 from friends where user1 in (
-                SELECT user2 from friends where user1 = $this->id))
-                and id <> $this->id
-                and id NOT IN (SELECT user2 from friends where user1 = $this->id)"; //except friends id
+                SELECT user2 from friends fofs where fofs.user1 in (
+                SELECT user2 from friends where user1 = $this->id)
+                   and fofs.user2 <> $this->id
+                   and fofs.user2 NOT IN (SELECT user2 from friends where user1 = $this->id))"; //except friends id
         $users = parent::raw($sql);
         return $users;
     }

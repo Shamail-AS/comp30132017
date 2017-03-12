@@ -69,7 +69,8 @@ $suggestions = $friendship->suggestionsFor($user);
             <tbody>
             <?php foreach ($friendships as $friend) { ?>
                 <tr>
-                    <td><?php echo $friend->name ?></td>
+                    <td><a href="viewProfile.php?user=<?php echo $friend->id ?>"><p><?php echo $friend->name ?></p></a>
+                    </td>
                     <td><?php echo $friend->email ?></td>
                     <td><a href="viewProfile.php?user=<?php echo $friend->id ?>"
                            class="btn btn-sm btn-primary">Profile</a></td>
@@ -92,7 +93,7 @@ $suggestions = $friendship->suggestionsFor($user);
             <?php foreach ($suggestions as $s_user) { ?>
                 <li class="list-group-item">
                     <div class="search-result">
-                        <p><?php echo $s_user->name ?></p>
+                        <a href="viewProfile.php?user=<?php echo $s_user->id ?>"><p><?php echo $s_user->name ?></p></a>
                         <p><?php echo $s_user->email ?></p>
                         <?php if (!$user->hasContacted($s_user)) { ?>
                             <a href="sendInvite.php?user=<?php echo $s_user->id ?>" class="btn btn-primary"

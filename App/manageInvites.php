@@ -10,6 +10,7 @@ use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
+$session->blockGuest();
 
 $user = $session->user;
 $user = new User($user->getAllData());

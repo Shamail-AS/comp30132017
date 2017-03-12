@@ -12,19 +12,9 @@ use Database\Models\Friendship;
 use Database\Models\User;
 
 
+$friendship = new Friendship();
 $user = new User();
-$u = $user->find(11);
+$user1 = $user->find(41);
+$user2 = $user->find(71);
 
-
-highlight_string(var_export($u, true));
-
-$u->name = $u->name."q";
-
-
-
-//$u->save();
-
-
-$u = $user->find(11);
-
-highlight_string(var_export($u, true));
+var_dump($friendship->areFriendsOfFriend($user1, $user2));
