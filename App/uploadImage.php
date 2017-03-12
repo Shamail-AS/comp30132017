@@ -38,12 +38,6 @@ $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionStrin
 $album = new Album();
 $optList = $album->getByUser($user->id);
  if (isset($_POST) && !empty($_POST)) {
-     if(empty($_FILES["fileToUpload"]["tmp_name"])){
-         //empty
-         $session->addError("imgEmpty", "Please select an image");
-         $session->redirect('uploadImage');
-     }
-     //pr($_FILES);
      $validator = new Validator();
      $errors = $validator->validateUserRegistrationData($_POST);
      if (count($errors) > 0) {
@@ -67,32 +61,38 @@ $optList = $album->getByUser($user->id);
              $session->redirect('uploadImage');
          }
 
-         // Create blob REST proxy.
-         $blobRestProxy = ServicesBuilder::getInstance()->createBlobService($connectionString);
-         $content = fopen($_FILES["fileToUpload"]["tmp_name"], "r");
-         $blob_name = $_FILES["fileToUpload"]["name"];
-
-         try    {
-             //Upload blob
-             $blobRestProxy->createBlockBlob("mycontainer", $blob_name, $content);
+         if(empty($_FILES["fileToUpload"]["tmp_name"])){
+             $session->addError("imgEmpty", "Please select an image");
+             $session->redirect('uploadImage');
          }
-         catch(ServiceException $e){
-             // Handle exception based on error codes and messages.
-             // Error codes and messages are here:
-             // http://msdn.microsoft.com/library/azure/dd179439.aspx
-             $code = $e->getCode();
-             $error_message = $e->getMessage();
-             echo $code.": ".$error_message."<br />";
-         }
+         else {
+             // Create blob REST proxy.
+             $blobRestProxy = ServicesBuilder::getInstance()->createBlobService($connectionString);
+             $content = fopen($_FILES["fileToUpload"]["tmp_name"], "r");
+             $blob_name = $_FILES["fileToUpload"]["name"];
 
-         $image = new Image();
-         $image->name = $_POST['title'];
-         $image->description = $_POST['content'];
-         $image->album_id = $_POST['selAlbum'];
-         $image->URL = "https://comp3013blob.blob.core.windows.net/mycontainer/" . $_FILES["fileToUpload"]["name"];
-         $image->save();
-         $newURL = "viewAlbum.php?id=" . $_POST['selAlbum'];
-         $session->redirect($newURL);
+             try    {
+                 //Upload blob
+                 $blobRestProxy->createBlockBlob("mycontainer", $blob_name, $content);
+             }
+             catch(ServiceException $e){
+                 // Handle exception based on error codes and messages.
+                 // Error codes and messages are here:
+                 // http://msdn.microsoft.com/library/azure/dd179439.aspx
+                 $code = $e->getCode();
+                 $error_message = $e->getMessage();
+                 echo $code.": ".$error_message."<br />";
+             }
+
+             $image = new Image();
+             $image->name = $_POST['title'];
+             $image->description = $_POST['content'];
+             $image->album_id = $_POST['selAlbum'];
+             $image->URL = "https://comp3013blob.blob.core.windows.net/mycontainer/" . $_FILES["fileToUpload"]["name"];
+             $image->save();
+             $newURL = "viewAlbum.php?id=" . $_POST['selAlbum'];
+             $session->redirect($newURL);
+         }
      }
  }
 function pr($data)
