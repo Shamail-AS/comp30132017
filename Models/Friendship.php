@@ -19,6 +19,17 @@ class Friendship extends Model
         return count($friendship) > 0;
     }
 
+    public function areFriendsOfFriend($user1, $user2)
+    {
+        $sql = "SELECT count(distinct user2) as count from friends fofs where user1 in (
+                  SELECT user2 from friends where user1 = $user1->id)
+                   and fofs.user2 = $user2->id and fofs.user2 <> $user1->id 
+                   and fofs.user2 NOT IN (SELECT user2 from friends where user1 = $user1->id )"; //except friends id
+        $friendship = parent::raw($sql);
+
+        return $friendship[0]->count > 0;
+    }
+
 
     public function allFriends($user)
     {
@@ -42,19 +53,18 @@ class Friendship extends Model
     public function suggestionsFor($user)
     {
         $friends = $user->getFriends();
+        $fofs = $user->getFriendsOfFriends();
+        array_push($friends, $user); //the candidates must be similar to these
+
         $friendIds = array_map(function ($friend) {
             return $friend->id;
         }, $friends);
-        //var_dump($friends);
+
         $userManager = new User();
         if (count($friends) > 0)
-            $directory_users = $userManager->whereNotIn(null, 'id', $friendIds); //candidates
+            $directory_users = $userManager->whereNotIn(null, 'id', $friendIds); //candidates (all except friends + user)
         else
             $directory_users = $userManager->all(); //candidates
-
-        array_push($friends, $user); //the candidates must be similar to these
-
-        //array_udiff($directory_users,$friends,'compByIds');
         $similarUsers = [];
 
         foreach ($directory_users as $candidate) { //candidates
@@ -63,20 +73,24 @@ class Friendship extends Model
 
                 //friends + me will also be in the directory_users of users. Skip those
                 if ($friend->id == $candidate->id) continue;
-                $similarity += $this->getSimilarity($candidate, $friend);
+                $similarity += $this->getSimilarity($candidate, $friend, $fofs);
             }
             $candidate->similarity = $similarity;
             //var_dump($candidate);
             if ($similarity > self::SIMILARITY_THRESHOLD)
                 array_push($similarUsers, $candidate);
         }
-        $fofs = $user->getFriendsOfFriends();
-        return array_merge($similarUsers, $fofs);
+
+        return $similarUsers;
     }
 
-    public function getSimilarity($d_user, $friend)
+    public function getSimilarity($d_user, $friend, $fofs = null)
     {
         $similarity = 0;
+        if ($fofs == null) {
+            $fofs = $friend->getFriendsOfFriends();
+        }
+        if (array_key_exists($d_user->id, $fofs)) $similarity++;
         if ($d_user->birthplace == $friend->birthplace) $similarity++;
         if ($d_user->work == $friend->birthplace) $similarity++;
         if ($d_user->school == $friend->school) $similarity++;

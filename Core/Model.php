@@ -107,6 +107,7 @@ class Model extends DB
         return $this->where($cols, $inStmt);
     }
 
+
     public function raw($sql)
     {
         return $this->asModel(parent::raw($sql));

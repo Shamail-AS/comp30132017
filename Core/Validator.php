@@ -51,4 +51,46 @@ class Validator
         }
         return $errors;
     }
+
+    public function validateUserProfileData($post_data)
+    {
+        $errors = [];
+        $messages = [
+            'name' => 'Invalid or missing name',
+            'email' => 'Invalid or missing email',
+            'sex' => 'Invalid or missing sex',
+            'interest' => 'Invalid or missing interest',
+            'birthplace' => 'Invalid or missing birthplace',
+            'work' => 'Invalid or missing workplace',
+            'school' => 'Invalid or missing school',
+            'dob' => 'Invalid or missing dob',
+            'university' => 'Invalid or missing university',
+        ];
+        foreach ($post_data as $key => $value) {
+            if (empty($post_data[$key])) {
+                $errors[$key] = $messages[$key];
+            }
+        }
+
+        return $errors;
+    }
+    public function validateImage($files_data){
+        $errors = [];
+        $messages = [
+            'size' => 'Invalid size',
+            'format' => 'Invalid format',
+        ];
+        $extensions = ['jpg', 'jpeg', 'png', 'img', 'gif'];
+        foreach ($files_data as $file_name => $file_attributes) {
+            if($file_attributes['size'] > 500000){
+                $errors[$file_name]['size'] = $messages['size'];
+            }
+            $ext = explode('.',$file_attributes['name'])[1];
+
+            if(!array_key_exists($ext,$extensions)){
+                $errors[$file_name]['format'] = $messages['format'];
+            }
+       }
+       return $errors;
+    }
 }

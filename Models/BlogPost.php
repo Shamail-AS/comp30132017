@@ -27,4 +27,10 @@ class Blog_post extends Model
     public function updatePost($id, $data) {
         return $this->update($this->table, $id, $data);
     }
+
+    public function owner()
+    {
+        $u = new User();
+        return $u->find($this->user_id);
+    }
 }

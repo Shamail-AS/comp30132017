@@ -11,6 +11,8 @@ namespace Database\Models;
 require_once('../Core/Model.php');
 require_once('../Models/Friendship.php');
 require_once('../Models/Invite.php');
+require_once('../Models/Image.php');
+require_once('../Models/Album.php');
 
 class User extends Model
 {
@@ -41,10 +43,10 @@ class User extends Model
     public function getFriendsOfFriends()
     {
         $sql = "SELECT * from users where id in(
-                SELECT user2 from friends where user1 in (
-                SELECT user2 from friends where user1 = $this->id))
-                and id <> $this->id
-                and id NOT IN (SELECT user2 from friends where user1 = $this->id)"; //except friends id
+                SELECT user2 from friends fofs where fofs.user1 in (
+                SELECT user2 from friends where user1 = $this->id)
+                   and fofs.user2 <> $this->id
+                   and fofs.user2 NOT IN (SELECT user2 from friends where user1 = $this->id))"; //except friends id
         $users = parent::raw($sql);
         return $users;
     }
@@ -114,5 +116,30 @@ class User extends Model
             'sent' => $sent,
             'all' => array_merge($received, $sent)
         ];
+    }
+
+    public function profilePic(){
+        $image = new Image();
+        if($this->pic == null) return $image;
+
+        $i = $image->find(($this->pic));
+        return $i;
+    }
+
+    public function proifilePicAlbum(){
+        $album = new Album();
+        $results = $album->where(null,"name = 'Profile pictures'");
+        if(empty($results)){
+            $album = new Album();
+            $album->name = 'Profile pictures';
+            $album->user_id = $this->id;
+            $album->privacy_level = 1; //Public
+            $album->save();
+            return $album;
+        }
+        else{
+            return $results[0];
+        }
+
     }
 }

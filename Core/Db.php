@@ -32,7 +32,7 @@ class DB
         }
     }
 
-    public function getInstance()
+    public static function getInstance()
     {
         if (is_null(self::$instance)) {
             self::$instance = new DB(self::DB_HOST, self::DB_USER, self::DB_PASS, self::DB_NAME);
@@ -64,18 +64,18 @@ class DB
 
     protected function insert($table, $data)
     {
-        $dataString = implode("','", array_values($data));
+        $dataString = implode(", :", array_keys($data)); // the PDO parameterized query
         $colString = implode("`,`", array_keys($data));
-        $statement = "INSERT INTO $table (`$colString`) VALUES ('$dataString')";
-        //print $statement;
-        return $this->exec($statement);
+        $statement = "INSERT INTO $table (`$colString`) VALUES (:$dataString)";
+        return $this->exec($statement, $data);
     }
 
     protected function update($table, $id, $data)
     {
+        unset($data['id']);
         $updateString = implode(",",$this->zipArray($data));
         $statement = "UPDATE $table SET $updateString WHERE `id`=$id";
-        return $this->exec($statement);
+        return $this->exec($statement,$data);
     }
 
     protected function deleteWhere($table, $where)
@@ -84,20 +84,29 @@ class DB
         return $this->exec($statement);
     }
 
-    private function exec($statement)
+    private function exec($statement, $values = null)
     {
 
-        $db = $this->getInstance();
+        $db = self::getInstance();
         if ($this->build_log) {
             $log = $db->connection->quote($statement);
             $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$log)");
         }
-        $db->connection->exec($statement);
+
+        if($values != null){
+            $prepared = $db->connection->prepare($statement);
+
+            $prepared->execute($values);
+
+        }
+        else{
+            $db->connection->exec($statement);
+        }
         return $db->connection->lastInsertId();
     }
     private function query($query)
     {
-        $db = $this->getInstance();
+        $db = self::getInstance();
         if ($this->build_log) {
             $log = $db->connection->quote($query);
             $db->connection->exec("INSERT INTO `sql_log` VALUES(null,$log)");
@@ -111,8 +120,7 @@ class DB
     {
         $zipped = [];
         foreach ($array as $key=>$value){
-            if ($key == 'id') continue;
-            array_push($zipped, "`$key`='$value'");
+            array_push($zipped, "`$key`=:$key");
         }
         return $zipped;
     }

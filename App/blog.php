@@ -17,11 +17,17 @@ use Database\Models\User;
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
+
 $user = $session ->user;
 
 $user_id = $user->id;
 $blog = new Blog_post();
 $blogs = $blog->getByUser($user_id);
+
+if (isset($_GET['user'])) {
+    $blog = new Blog_post();
+    $blogs = $blog->getByUser($_GET['user']);
+}
 
 if(isset($_GET['delpost'])){
 
@@ -45,28 +51,29 @@ if(isset($_GET['delpost'])){
 <body>
     <?php include('common/nav.php') ?>
 
-        <h1>Blog</h1>
-        <hr />
+    <h1>Blog</h1>
+    <hr />
 
-        <?php
+    <?php
 
-            if (!empty($blogs)) {
-                foreach ($blogs as $b) {
+    if (!empty($blogs)) {
+        foreach ($blogs as $b) {
 
-                    echo '<div>';
-                        echo '<h1>'.$b->post_title.'</h1>';
-                        echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($b->timestamp)).'</p>';
-                        echo '<p><a href = "viewPost.php?id= '.$b->id.'">Read More</a></p>';
-                    echo '</div>';
+            echo '<div>';
+                echo '<h1>'.$b->post_title.'</h1>';
+                echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($b->timestamp)).'</p>';
+                echo '<p><a href = "viewPost.php?id= '.$b->id.'">Read More</a></p>';
+            echo '</div>';
 
-                }
-            }else {
-                echo "No Blog Post";
-            }
+        }
+    }else {
+        echo "No Blog Post";
+    }
 
 
-        ?>
-        <h4><a href="addPost.php">Add Post</a></h4>
+    ?>
+    <h4><a href="searchBlog.php">Search Blog</a></h4>
+    <h4><a href="addPost.php">Add Post</a></h4>
 
 
 </body>

@@ -6,15 +6,19 @@
  * Time: 19:38
  */
 include_once('../Core/SessionManager.php');
+include_once('../Core/PrivacyManager.php');
 include_once('../Models/User.php');
 include_once('../Models/Friendship.php');
 
+use Database\Core\PrivacyManager;
 use Database\Models\Friendship;
 use Database\Models\User;
 use Http\Session\SessionManager;
 
 
 $session = new SessionManager();
+
+
 $session->start();
 $session->blockGuest();
 $u = new User();
@@ -22,9 +26,11 @@ $u = new User();
 $logged_user = new User($session->user->getAllData());
 $view_user = $logged_user;
 $isViewingOwn = true;
+$canView = true;
 
 if (isset($_GET) && !empty($_GET)) {
     $view_user = $u->find($_GET['user']);
+    $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
     $isViewingOwn = false;
     $friendship = new Friendship();
     $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
@@ -50,7 +56,12 @@ if (isset($_GET) && !empty($_GET)) {
 
 <?php include('common/nav.php') ?>
 <div class="container">
-    <h1>Profile Details</h1>
+    <?php if (!$canView) { ?>
+        <div class="alert alert-danger">You can't view this profile due to privacy settings of the owner</div>
+        <?php exit();
+    } ?>
+    <h1>Profile Details <?php if ($isViewingOwn) { ?> <a class="badge badge-info"
+                                                         href="editProfile.php">Edit</a><?php } ?></h1>
     <hr>
     <div class="row">
         <div class="col-md-6">
@@ -77,10 +88,38 @@ if (isset($_GET) && !empty($_GET)) {
         </div>
         <div class="col-md-6">
             <img height="320px"
-                 src="http://esq.h-cdn.co/assets/15/37/980x490/landscape-1441711326-sam-smith-spectre-song.jpg">
+                 src="<?php echo $view_user->profilePic()->URL ?>">
+            <?php if($view_user->profilePic()->URL == null){ ?>
+            <div class="alert alert-warning">No profile picture yet</div>
+            <?php } ?>
         </div>
     </div>
+    <hr>
+    <h1>Friends</h1>
+    <hr>
 
+    <?php foreach ($view_user->getFriends() as $friend) {
+        if ($friend->id == $session->user->id) continue; ?>
+        <li class="list-group-item">
+            <div class="search-result">
+                <a href="viewProfile.php?user=<?php echo $friend->id ?>"><p><?php echo $friend->name ?></p></a>
+                <p><?php echo $friend->email ?></p>
+                <?php if (PrivacyManager::canSendConnectionRequests($friend, $session->user)) { ?>
+                    <?php if (!$user->hasContacted($friend)) { ?>
+                        <a href="sendInvite.php?user=<?php echo $friend->id ?>" class="btn btn-primary"
+                           type="button">Send
+                            request</a>
+                    <?php } else {
+                        echo "A connection request already exists";
+                        ?>
+                        <a href="manageInvites.php" class="btn btn-default" type="button">Requests</a>
+                    <?php }
+                } else {
+                    echo "Can't send connection request due to privacy settings";
+                } ?>
+            </div>
+        </li>
+    <?php } ?>
 
 </div>
 

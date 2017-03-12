@@ -75,10 +75,6 @@ else {
 <div align = center><a href = "createCircle.php"><button class="btn btn-primary">Create New Circle</button></a></div>
 </div>
 
-
-
-
-
 </body>
 </html>
 

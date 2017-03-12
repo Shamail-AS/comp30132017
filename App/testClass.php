@@ -12,10 +12,9 @@ use Database\Models\Friendship;
 use Database\Models\User;
 
 
-$user = new User();
-$u = $user->find(1);
 $friendship = new Friendship();
-//$f = $friendship->find(1);
-$friendship->delete("id = 11");
+$user = new User();
+$user1 = $user->find(41);
+$user2 = $user->find(71);
 
-
+var_dump($friendship->areFriendsOfFriend($user1, $user2));
