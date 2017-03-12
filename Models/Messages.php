@@ -19,6 +19,12 @@ class Messages extends Model
         return $rows;
     }
 
+    public function sender()
+    {
+        $u = new User();
+        return $u->find($this->from_user);
+    }
+
 
 
 
