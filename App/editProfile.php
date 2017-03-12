@@ -48,7 +48,7 @@ if(isset($_POST) && !empty($_POST)){
         $image->name = $_POST['title'];
         $image->description = $_POST['desc'] ?? '';
         $image->album_id = intval($user->proifilePicAlbum()->id);
-        $image->album_id = 182;
+
 
         $result = $fileManager->upload($image->name.'.'.$ext,$content);
         if($result){
