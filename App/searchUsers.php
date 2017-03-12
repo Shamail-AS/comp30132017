@@ -6,7 +6,11 @@
  * Time: 13:16
  */
 require_once('../Core/SessionManager.php');
+require_once('../Core/PrivacyManager.php');
 require_once('../Models/User.php');
+require_once('../Models/Friendship.php');
+use Database\Core\PrivacyManager;
+use Database\Models\Friendship;
 use Database\Models\User;
 use Http\Session\SessionManager;
 
@@ -21,8 +25,19 @@ if (isset($_GET) && !empty($_GET)) {
     $searcher = $_GET['searcher'];
     if (strlen($searcher) > 0) {
         $searching = true;
-        $user = new User();
-        $users = $user->where(null, "users.name LIKE '%$searcher%'");
+        $u = new User();
+        $users = $u->where(null, "users.name LIKE '%$searcher%'");
+        $f = new Friendship();
+        for ($i = 0; $i < count($users); $i++) {
+            $user = $users[$i];
+
+            if (!PrivacyManager::canSearchProfile($user, $session->user)) {
+                $user->hidden = true;
+            }
+            if ($f->areFriends($user, $session->user)) {
+                $user->isFriend = true;
+            }
+        }
 
     }
 
@@ -67,10 +82,18 @@ if (isset($_GET) && !empty($_GET)) {
             <?php foreach ($users as $user) { ?>
                 <li class="list-group-item">
                     <div class="search-result">
-                        <p><?php echo $user->name ?></p>
+                        <?php if ($user->hidden) {
+                            echo "result hidden due to privacy settings";
+                            continue;
+                        }
+                        ?>
+                        <a href="viewProfile.php?user=<?php echo $user->id ?>"><p><?php echo $user->name;
+                                if ($user->isFriend) echo " (Friend)"; ?></p></a>
                         <p><?php echo $user->email ?></p>
-                        <a href="sendInvite.php?user=<?php echo $user->id ?>" class="btn btn-primary" type="button">Send
-                            request</a>
+                        <?php if (!$user->isFriend && PrivacyManager::canSendConnectionRequests($user, $session->user)) { ?>
+                            <a href="sendInvite.php?user=<?php echo $user->id ?>" class="btn btn-primary" type="button">Send
+                                request</a>
+                        <?php } ?>
                     </div>
                 </li>
             <?php } ?>

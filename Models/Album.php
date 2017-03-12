@@ -36,6 +36,11 @@ class Album extends Model
         return $result;
     }
 
+    public function owner()
+    {
+        $u = new User();
+        return $u->find($this->user_id);
+    }
     public function isOwned($user_id) {
         if ($this->user_id == $user_id) {
             return true;

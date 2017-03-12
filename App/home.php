@@ -6,9 +6,11 @@
  * Time: 14:00
  */
 require_once('../Core/SessionManager.php');
+require_once('../Core/PrivacyManager.php');
 require_once('../Models/User.php');
 require_once('../Models/Friendship.php');
 
+use Database\Core\PrivacyManager;
 use Database\Models\Friendship;
 use Database\Models\User;
 use Http\Session\SessionManager;
@@ -95,15 +97,19 @@ $suggestions = $friendship->suggestionsFor($user);
                     <div class="search-result">
                         <a href="viewProfile.php?user=<?php echo $s_user->id ?>"><p><?php echo $s_user->name ?></p></a>
                         <p><?php echo $s_user->email ?></p>
-                        <?php if (!$user->hasContacted($s_user)) { ?>
-                            <a href="sendInvite.php?user=<?php echo $s_user->id ?>" class="btn btn-primary"
-                               type="button">Send
-                                request</a>
-                        <?php } else {
-                            echo "A connection request already exists";
-                            ?>
-                            <a href="manageInvites.php" class="btn btn-default" type="button">Requests</a>
-                        <?php } ?>
+                        <?php if (PrivacyManager::canSendConnectionRequests($s_user, $session->user)) { ?>
+                            <?php if (!$user->hasContacted($s_user)) { ?>
+                                <a href="sendInvite.php?user=<?php echo $s_user->id ?>" class="btn btn-primary"
+                                   type="button">Send
+                                    request</a>
+                            <?php } else {
+                                echo "A connection request already exists";
+                                ?>
+                                <a href="manageInvites.php" class="btn btn-default" type="button">Requests</a>
+                            <?php }
+                        } else {
+                            echo "Can't send connection request due to privacy settings";
+                        } ?>
                     </div>
                 </li>
             <?php } ?>

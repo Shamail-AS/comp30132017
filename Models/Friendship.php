@@ -84,10 +84,13 @@ class Friendship extends Model
         return $similarUsers;
     }
 
-    public function getSimilarity($d_user, $friend, $fofs)
+    public function getSimilarity($d_user, $friend, $fofs = null)
     {
         $similarity = 0;
-        if (array_key_exists($friend->id, $fofs)) $similarity++;
+        if ($fofs == null) {
+            $fofs = $friend->getFriendsOfFriends();
+        }
+        if (array_key_exists($d_user->id, $fofs)) $similarity++;
         if ($d_user->birthplace == $friend->birthplace) $similarity++;
         if ($d_user->work == $friend->birthplace) $similarity++;
         if ($d_user->school == $friend->school) $similarity++;
