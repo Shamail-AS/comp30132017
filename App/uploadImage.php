@@ -38,6 +38,11 @@ $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionStrin
 $album = new Album();
 $optList = $album->getByUser($user->id);
  if (isset($_POST) && !empty($_POST)) {
+     if(empty($_FILES["fileToUpload"]["tmp_name"])){
+         //empty
+         $session->addError("imgEmpty", "Please select an image");
+         $session->redirect('uploadImage');
+     }
      //pr($_FILES);
      $validator = new Validator();
      $errors = $validator->validateUserRegistrationData($_POST);
@@ -133,6 +138,11 @@ function pr($data)
                     <?php } ?>
                     <?php if ($session->hasErrors() && $session->getError("imgExt")) {
                         $error_msg = $session->getError("imgExt");
+                        ?>
+                        <span class="badge badge-danger"><?php echo $error_msg ?></span>
+                    <?php } ?>
+                    <?php if ($session->hasErrors() && $session->getError("imgEmpty")) {
+                        $error_msg = $session->getError("imgEmpty");
                         ?>
                         <span class="badge badge-danger"><?php echo $error_msg ?></span>
                     <?php } ?>
