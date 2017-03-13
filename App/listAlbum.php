@@ -23,6 +23,10 @@ if (!isset($_GET['user'])) {
 $user_id = $_GET['user'];
 $album = new Album();
 $albums = $album->getByUser($user_id);
+$displayGroup = 0;
+if ($_GET['user'] == $user->id) {
+    $displayGroup = 1;
+}
 //pr($albums);
 function pr($data)
 {
@@ -107,21 +111,23 @@ function pr($data)
 <div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%;text-align: center" class="container">
     <div >
         <?php
-        echo "<h1>All album shared by group</h1>";
+        if ($displayGroup)
+            echo "<h1>All album shared by group</h1>";
         ?>
     </div>
     <p>
         <?php
-        $sharedAlbum = new Album();
-        $circles = new Circles_Member();
-        $mycircles = $circles->getByUser($user->id);
-        foreach ($mycircles as $c) {
-            //if ($c->user != $user_id) {
-            $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
-            foreach ($sharedAlbums as $s) {
-                if ($s->user_id != $user_id) {
-                    $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
-                    echo "                <li class=\"photo-box\">
+        if ($displayGroup) {
+            $sharedAlbum = new Album();
+            $circles = new Circles_Member();
+            $mycircles = $circles->getByUser($user->id);
+            foreach ($mycircles as $c) {
+                //if ($c->user != $user_id) {
+                $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+                foreach ($sharedAlbums as $s) {
+                    if ($s->user_id != $user_id) {
+                        $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
+                        echo "                <li class=\"photo-box\">
                     <div class=\"image-wrap\">
                         <img src=" . $thumbnail . ">
                     </div>
@@ -129,6 +135,7 @@ function pr($data)
                         <h5><a href=\"viewAlbum.php?id=" . $s->id . "\">" . $s->name . "</a></h5>
                     </div>
                     </li>";
+                    }
                 }
             }
         }
