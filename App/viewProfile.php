@@ -36,8 +36,8 @@ if (isset($_GET['user']) && !empty($_GET)) {
     $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
 }
 
-$data = $logged_user->getAllData();
-$updatedUser = $u->find($logged_user->id);
+$data = $view_user->getAllData();
+$updatedUser = $u->find($view_user->id);
 $userData = $updatedUser->getAllData();
 
 if (isset($_GET['export'])) {
@@ -66,18 +66,11 @@ if (isset($_GET['import'])){
         if(strpos($node->nodeName,'#text') > -1) continue;
         if(strlen($node->nodeValue) < 1) continue;
         if(!array_key_exists( $node->nodeName,$userData )) continue;
-        echo($node->nodeName."<br>");
-        $updatedUser->set($node->nodeName, $node->nodeValue);
+        #echo($node->nodeName."<br>");
+        $view_user->set($node->nodeName, $node->nodeValue);
     }
-    var_dump($updatedUser->getAllData());
-    $updatedUser->save();
-}
-
-function pr($data)
-{
-    echo "<pre>";
-    print_r($data); // or var_dump($data);
-    echo "</pre>";
+    #var_dump($updatedUser->getAllData());
+    $view_user->save();
 }
 
 ?>
@@ -143,7 +136,7 @@ function pr($data)
             <h3>Interested in</h3>
             <p><?php echo $view_user->interested_in() ?></p>
             <?php
-            if (isset($_GET) && !empty($_GET)) {
+            if (isset($_GET['user']) && !empty($_GET)) {
                 $uid = $_GET['user'];
             } else {
                 $uid = $user->id;
