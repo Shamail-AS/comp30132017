@@ -134,6 +134,7 @@ function pr($data)
             </div>
             <div class="form-group">
                 <button id="submitBtn" class="btn btn-default">Submit</button>
+                <button id="deleteBtn" class="btn btn-default">Delete</button>
             </div>
         </form>
     </div>
@@ -167,10 +168,21 @@ function pr($data)
             album_name = $('#name').val();
             plevel = $('#plevel').val();
 
-            $.post( "albumController.php", { id: album_id, name: album_name, plevel: plevel, selGroup: selVal, delGroup: delVal } ,function(response,status){
+            $.post( "albumController.php", { id: album_id, name: album_name, plevel: plevel, selGroup: selVal, delGroup: delVal, action: 'edit' } ,function(response,status){
                 alert("Success");
             });
             location.reload();
+        });
+
+        $('#deleteBtn').click(function(e) {
+            e.preventDefault();
+            album_name = $('#name').val();
+            plevel = $('#plevel').val();
+
+            $.post( "albumController.php", { id: album_id, action: 'delete' } ,function(response,status){
+                alert("Success");
+            });
+            window.location = "../App/listAlbum.php?user=" + <?php echo $user->id ?>;
         });
 
     });

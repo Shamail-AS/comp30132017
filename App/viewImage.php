@@ -10,12 +10,16 @@ require_once('../Models/Image.php');
 require_once('../Models/Comment.php');
 require_once('../Models/User.php');
 require_once('../Models/Album.php');
+include_once('../Core/PrivacyManager.php');
+require_once('../Models/Circles_Member.php');
 
 use Database\Models\Image;
 use Database\Models\User;
 use Database\Models\Comment;
 use Database\Models\Album;
 use Http\Session\SessionManager;
+use Database\Core\PrivacyManager;
+use Database\Models\Circles_Member;
 
 $session = new SessionManager();
 $session->start();
@@ -37,6 +41,23 @@ $i = $image->find($image_id);
 $tags = $i->getTags();
 
 $a = $album->find($i->album_id);
+$canView = PrivacyManager::canViewAlbum($user, $a);
+
+$sharedAlbum = new Album();
+$circles = new Circles_Member();
+$mycircles = $circles->getByUser($user->id);
+
+if ($user->id == $a->user_id){
+    $canView = 1;
+}
+
+foreach ($mycircles as $c) {
+    $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+    foreach ($sharedAlbums as $s) {
+        if ($s->id == $i->album_id)
+            $canView = 1;
+    }
+}
 //pr($tags);
 //pr($i);
 
@@ -80,7 +101,6 @@ function pr($data)
 
 <?php include('common/nav.php') ?>
 <div class="container">
-
     <div class="starter-template">
         <h1>View Image</h1>
         <?php
@@ -88,6 +108,10 @@ function pr($data)
         echo "<h6><a href= ". $url . ">Back To Album</a></h6>"
         ?>
     </div>
+    <?php if (!$canView) { ?>
+        <div class="alert alert-danger">You can't view this image due to privacy settings of the owner</div>
+        <?php exit();
+    } ?>
     <div>
         <div class="form-group">
             <?php
@@ -166,8 +190,8 @@ function pr($data)
                 },
                 success : function(data) {
                     e.params.data.id = data;
-                    console.log(e.params.data);
-                    //alert(data);
+                    if (data == 'error')
+                        alert("Connection Timed-out (Blame the database instead)!");
                 }
             });
         });
@@ -176,12 +200,13 @@ function pr($data)
             $.ajax({
                 type: "POST",
                 url: 'TagController.php',
-                data: {tag_id: e.params.data.text, action: 'remove'},    //Or you can e.removed.text
+                data: {tag_id: e.params.data.text, image_id: <?php echo json_encode($image_id); ?>, action: 'remove'},    //Or you can e.removed.text
                 error: function () {
                     alert("error");
                 },
                 success : function(data) {
-                    //alert(data);
+                    if (data == 'error')
+                        alert("Connection Timed-out (Blame the database instead)!");
                 }
             });
         });

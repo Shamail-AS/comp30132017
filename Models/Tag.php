@@ -37,16 +37,18 @@ class Tag extends Model
         //echo $latest_tag;
     }
 
-    public function getIDbyKey($key) {
-        $sql = "SELECT `id` FROM tags WHERE `key` = '$key'";
+    public function getIDbyKey($key, $image_id) {
+        $sql = "SELECT t.id as id FROM tags t, image_tags i_t WHERE t.id = i_t.tag AND i_t.image = '$image_id' AND t.key = '$key'";
         $result = parent::raw($sql);
         return $result[0]->id;
     }
 
-    public function removeTag($key) {
-        $id = $this->getIDbyKey($key);
+    public function removeTag($key, $image_id) {
+        $id = $this->getIDbyKey($key, $image_id);
         //echo $id;
-        parent::deleteByColumn("image_tags", "tag", $id);
-        parent::delete("tags", $id);
+        $sql = "DELETE FROM image_tags WHERE `tag` = '$id'";
+        $result = parent::raw($sql);
+        $sql2 = "DELETE FROM tags WHERE `id` = '$id'";
+        $result = parent::raw($sql2);
     }
 }

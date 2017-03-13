@@ -75,4 +75,13 @@ class Album extends Model
         $result = parent::raw($sql);
         echo $result;
     }
+
+    public function remove($id) {
+        $sql = "DELETE FROM circle_album WHERE `album` = '$id'";
+        $sql2 = "DELETE FROM albums WHERE `id` = '$id'";
+        $sql3 = "DELETE FROM images WHERE `album_id` = '$id'";
+        parent::raw($sql);
+        parent::raw($sql2);
+        parent::raw($sql3);
+    }
 }

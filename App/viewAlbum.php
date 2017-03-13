@@ -1,13 +1,17 @@
 <?php
 require_once('../Core/SessionManager.php');
+include_once('../Core/PrivacyManager.php');
 require_once('../Models/User.php');
 require_once('../Models/Image.php');
 require_once('../Models/Album.php');
+require_once('../Models/Circles_Member.php');
 
 use Database\Models\Image;
 use Database\Models\User;
 use Database\Models\Album;
 use Http\Session\SessionManager;
+use Database\Core\PrivacyManager;
+use Database\Models\Circles_Member;
 
 $session = new SessionManager();
 $session->start();
@@ -22,8 +26,25 @@ if (!isset($_GET['id'])) {
 
 $album_id = $_GET['id'];
 
+
 $album = new Album();
 $a = $album->find($album_id);
+
+$sharedAlbum = new Album();
+$circles = new Circles_Member();
+$mycircles = $circles->getByUser($user->id);
+
+$canView = PrivacyManager::canViewAlbum($user, $a);
+if ($user->id == $a->user_id){
+    $canView = 1;
+}
+foreach ($mycircles as $c) {
+    $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+    foreach ($sharedAlbums as $s) {
+        if ($s->id == $album_id)
+            $canView = 1;
+    }
+}
 
 $image = new Image();
 $images = $image->getByAlbumID($album_id);
@@ -88,6 +109,10 @@ function pr($data)
                 };
                 ?>
             </div>
+            <?php if (!$canView) { ?>
+                <div class="alert alert-danger">You can't view this album due to privacy settings of the owner</div>
+                <?php exit();
+            } ?>
             <div>
                 <?php
                 if (!empty($images)) {

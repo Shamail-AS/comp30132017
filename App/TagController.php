@@ -18,7 +18,7 @@ if (isset($_POST) && !empty($_POST)) {
     }
     elseif ($_POST['action'] == "remove") {
         $tag = new Tag();
-        $tag->removeTag($_POST['tag_id']);
+        $tag->removeTag($_POST['tag_id'], $_POST['image_id']);
     }
 }
 ?>
