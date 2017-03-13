@@ -69,8 +69,8 @@ function pr($data)
 <body>
 
 <?php include('common/nav.php') ?>
-<div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%" class="container">
-    <div class="starter-template">
+<div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%" class="container;text-align: center">
+    <div class="starter-template" style="text-align: center">
         <?php
         $url = "viewAlbum.php?id=" . $user_id;
         $u = new User();
@@ -92,7 +92,7 @@ function pr($data)
                     <div class=\"image-wrap\">
                         <img src=" . $thumbnail . ">
                     </div>
-                    <div class=\"description\">
+                    <div class=\"description\" style='text-align: center'>
                         <h5><a href=\"viewAlbum.php?id=" . $a->id . "\">" . $a->name . "</a></h5>
                     </div>
                 </li>";
@@ -104,7 +104,7 @@ function pr($data)
         ?>
     </p>
 </div>
-<div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%" class="container">
+<div style="display:inline-block;margin-left: 15%;margin-right: 15%; width: 70%;text-align: center" class="container">
     <div >
         <?php
         echo "<h1>All album shared by group</h1>";
@@ -125,7 +125,7 @@ function pr($data)
                     <div class=\"image-wrap\">
                         <img src=" . $thumbnail . ">
                     </div>
-                    <div class=\"description\">
+                    <div class=\"description\" style='text-align: center'>
                         <h5><a href=\"viewAlbum.php?id=" . $s->id . "\">" . $s->name . "</a></h5>
                     </div>
                     </li>";
