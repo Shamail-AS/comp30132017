@@ -58,7 +58,7 @@ if ($user == null) {
             <li class="nav-item">
                 <?php
                 if ($user != null) {
-                    $url = "blog.php?user=" . $user->id . "?isViewingOwn=" . True;
+                    $url = "blog.php";
                     echo "<li class=\"nav-item\"><a class=\"nav-link\" href= " . $url . ">My Blog</a></li>";
                 }
                 ?>

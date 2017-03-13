@@ -9,22 +9,29 @@
 require_once('../Models/BlogPost.php');
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
+include_once('../Core/PrivacyManager.php');
 
 use Http\Session\SessionManager;
 use Database\Models\Blog_post;
 use Database\Models\User;
+use Database\Core\PrivacyManager;
+
 
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 $user = $session ->user;
 
+$u = new User();
 
-$blog_post_id = $_GET['id'];
 $blog_post = new Blog_post();
+$blog_post_id = $_GET['id'];
 $b = $blog_post->find($blog_post_id);
 
-
+$isViewingOwn = True;
+if ($user->id != $b->user_id) {
+    $isViewingOwn = false;
+}
 
 
 ?>
@@ -61,8 +68,8 @@ $b = $blog_post->find($blog_post_id);
             echo '</div>';
 
         ?>
-        <a href="editPost.php?id=<?php echo $b->id;?>">Edit</a>
-        <a href="javascript:delpost('<?php echo $b->id;?>','<?php echo $b->post_title;?>')">Delete</a>
+        <?php if ($isViewingOwn) { ?> <a href="editPost.php?id=<?php echo $b->id;?>">Edit</a><?php } ?>
+        <?php if ($isViewingOwn) { ?> <a href="javascript:delpost('<?php echo $b->id;?>','<?php echo $b->post_title;?>')">Delete</a><?php } ?>
     </div>
 </body>
 </html>

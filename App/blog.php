@@ -9,10 +9,15 @@
 require_once('../Models/BlogPost.php');
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
+include_once('../Models/Friendship.php');
+include_once('../Core/PrivacyManager.php');
+
 
 use Http\Session\SessionManager;
 use Database\Models\Blog_post;
 use Database\Models\User;
+use Database\Core\PrivacyManager;
+use Database\Models\Friendship;
 
 $session = new SessionManager();
 $session->start();
@@ -20,14 +25,25 @@ $session->blockGuest();
 
 $user = $session ->user;
 
-$user_id = $user->id;
-$blog = new Blog_post();
-$blogs = $blog->getByUser($user_id);
+$u = new User();
+$logged_user = new User($session->user->getAllData());
+$view_user = $logged_user;
+$isViewingOwn = true;
+$canView = true;
 
-if (isset($_GET['user'])) {
-    $blog = new Blog_post();
-    $blogs = $blog->getByUser($_GET['user']);
+if (isset($_GET) && !empty($_GET)) {
+    $view_user = $u->find($_GET['user']);
+    $f = new Friendship();
+    if ($f->areFriends($view_user, $logged_user)) {
+        $canView = True;
+    }
+    else {
+        $canView = False;
+    }
+    $isViewingOwn = false;
 }
+$blog = new Blog_post();
+$blogs = $blog->getByUser($view_user->id);
 
 if(isset($_GET['delpost'])){
 
@@ -51,6 +67,11 @@ if(isset($_GET['delpost'])){
 <body>
     <?php include('common/nav.php') ?>
 
+    <?php if (!$canView) { ?>
+        <div class="alert alert-danger">You are not his friend!!!</div>
+        <?php exit();
+    } ?>
+
     <h1>Blog</h1>
     <hr />
 
@@ -72,8 +93,8 @@ if(isset($_GET['delpost'])){
 
 
     ?>
-    <h4><a href="searchBlog.php">Search Blog</a></h4>
-    <h4><a href="addPost.php">Add Post</a></h4>
+    <?php if ($isViewingOwn) { ?> <h4><a href="searchBlog.php">Search Blog</a></h4><?php } ?>
+    <?php if ($isViewingOwn) { ?> <h4><a href="addPost.php">Add Post</a></h4><?php } ?>
 
 
 </body>

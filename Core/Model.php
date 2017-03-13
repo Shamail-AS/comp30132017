@@ -27,6 +27,10 @@ class Model extends DB
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
 
+    public function set($key,$value){
+        $this->$key = $value;
+    }
+
     public function find($id)
     {
         $result = ($this->where(null, "id=$id"));

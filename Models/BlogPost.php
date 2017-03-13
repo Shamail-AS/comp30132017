@@ -15,7 +15,7 @@ class Blog_post extends Model
     protected $table = 'blog_post';
 
     public function getByUser($user_id) {
-        $rows = parent::findByColumn("users", $user_id);
+        $rows = parent::findByColumn("user_id", $user_id);
         return $rows;
     }
 
