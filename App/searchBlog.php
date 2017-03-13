@@ -28,9 +28,6 @@ if (isset($_GET['searcher']) && !empty($_GET['searcher'])) {
 
     }
 }
-
-$isViewingOwn = True;
-
 ?>
 
 <!DOCTYPE html>

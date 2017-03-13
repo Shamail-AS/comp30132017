@@ -49,12 +49,14 @@ if (isset($_GET['import'])){
 
     while($reader->read()) {
         $node = $reader->expand();
-        foreach ($userData as $key => $value) {
-            if ($node->nodeName == $key && $node->nodeValue != "") {
-                $u->$key = $node->nodeValue;
-            }
-        }
+        if(strpos($node->nodeName,'#text') > -1) continue;
+        if(strlen($node->nodeValue) < 1) continue;
+        if(!array_key_exists( $node->nodeName,$userData )) continue;
+        echo($node->nodeName."<br>");
+        $u->set($node->nodeName, $node->nodeValue);
     }
+    var_dump($u->getAllData());
+    var_dump(is_null($u->dob));
     $u->save();
 }
 
@@ -74,12 +76,12 @@ function pr($data)
     <title>Export</title>
     <script language="JavaScript" type="text/javascript">
         function exporting() {
-            window.location.href = 'import.php?export';
+            window.location.href = 'data.php';
             alert("Exported to xml_file folder");
 
         }
         function importing() {
-            window.location.href = 'import.php?import';
+            window.location.href = 'data.php';
             alert("Import from xml_file folder");
 
         }
