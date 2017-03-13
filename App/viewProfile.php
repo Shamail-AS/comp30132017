@@ -28,13 +28,58 @@ $view_user = $logged_user;
 $isViewingOwn = true;
 $canView = true;
 
-if (isset($_GET) && !empty($_GET)) {
+if (isset($_GET['user']) && !empty($_GET)) {
     $view_user = $u->find($_GET['user']);
     $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
     $isViewingOwn = false;
     $friendship = new Friendship();
     $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
 }
+
+$data = $logged_user->getAllData();
+$updatedUser = $u->find($logged_user->id);
+$userData = $updatedUser->getAllData();
+
+if (isset($_GET['export'])) {
+    @date_default_timezone_set("GMT");
+    $writer = new XMLWriter();
+
+    $writer->openURI('data.xml');
+    $writer->startDocument('1.0');
+    $writer->setIndent(4);
+    $writer ->startElement("User_Profile");
+    foreach ($data as $key=> $value) {
+        $writer->writeElement($key, $value);
+    }
+    $writer->endElement();
+    $writer->endDocument();
+}
+
+if (isset($_GET['import'])){
+    $reader = new XMLReader();
+    if (!$reader->open('xml_file/data.xml')) {
+        die("Failed to open data.xml");
+    }
+
+    while($reader->read()) {
+        $node = $reader->expand();
+        if(strpos($node->nodeName,'#text') > -1) continue;
+        if(strlen($node->nodeValue) < 1) continue;
+        if(!array_key_exists( $node->nodeName,$userData )) continue;
+        echo($node->nodeName."<br>");
+        $updatedUser->set($node->nodeName, $node->nodeValue);
+    }
+    var_dump($updatedUser->getAllData());
+    $updatedUser->save();
+}
+
+function pr($data)
+{
+    echo "<pre>";
+    print_r($data); // or var_dump($data);
+    echo "</pre>";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -47,6 +92,18 @@ if (isset($_GET) && !empty($_GET)) {
     <link rel="icon" href="../../favicon.ico">
 
     <title>Profile</title>
+    <script language="JavaScript" type="text/javascript">
+        function exporting() {
+            window.location.href = 'viewProfile.php?export';
+            alert("Exported to xml_file folder");
+
+        }
+        function importing() {
+            window.location.href = 'viewProfile.php?import';
+            alert("Import from xml_file folder");
+
+        }
+    </script>
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -130,6 +187,12 @@ if (isset($_GET) && !empty($_GET)) {
         </li>
     <?php } ?>
 
+    <?php if ($isViewingOwn) { ?>
+    <h1>Data</h1>
+    <hr>
+
+    <p><input type='button' value='Export' onclick = 'exporting()'</p><?php } ?>
+    <?php if ($isViewingOwn) { ?><p><input type='button' value='Import' onclick = 'importing()'</p><?php } ?>
 </div>
 
 
