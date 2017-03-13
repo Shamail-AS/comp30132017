@@ -85,6 +85,15 @@ if (isset($_GET) && !empty($_GET)) {
             <p><?php echo $view_user->sex() ?></p>
             <h3>Interested in</h3>
             <p><?php echo $view_user->interested_in() ?></p>
+            <?php
+            if (isset($_GET) && !empty($_GET)) {
+                $uid = $_GET['user'];
+            } else {
+                $uid = $user->id;
+            }
+                $url = "listAlbum.php?user=" . $uid;
+                echo "<h3><a href= ". $url . ">Show All Album By " . $view_user->name . "</a></h3>";
+            ?>
         </div>
         <div class="col-md-6">
             <img height="320px"
