@@ -178,14 +178,18 @@ if (isset($_GET['import'])){
                 } ?>
             </div>
         </li>
+        <br>
+
     <?php } ?>
 
     <?php if ($isViewingOwn) { ?>
     <h1>Data</h1>
     <hr>
 
-    <p><input type='button' value='Export' onclick = 'exporting()'</p><?php } ?>
-    <?php if ($isViewingOwn) { ?><p><input type='button' value='Import' onclick = 'importing()'</p><?php } ?>
+    <input class="btn btn-primary" type='button' value='Export' onclick = 'exporting()'><?php } ?>
+    <?php if ($isViewingOwn) { ?><input class="btn btn-primary" type='button' value='Import' onclick = 'importing()'><?php } ?>
+    <br>
+    <br>
 </div>
 
 
