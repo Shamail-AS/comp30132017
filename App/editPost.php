@@ -43,33 +43,38 @@ $b = $blog->find($blog_post_id);
 </head>
 <body>
     <?php include('common/nav.php') ?>
-    <div id ="wrapper">
+    <div class ="container">
         <h2>Edit Post</h2>
 
         <?php
         if(isset($_POST['submit'])){
-        $_POST = array_map('stripslashes', $_POST);
-        extract($_POST);
+            $_POST = array_map('stripslashes', $_POST);
+            extract($_POST);
 
-        if($_POST['postTitle'] == ''){
-            $error[] = 'Please enter the title.';
-        }
-        if($_POST['postCont'] == ''){
-            $error[] = 'Please enter the content.';
-        }
-        if(!isset($error)) {
-            try{
-                $data = array('post_title' => $_POST['postTitle'], 'post_content' => $_POST['postCont'], 'timestamp' => date('Y-m-d H:i:s'));
-                $b->updatePost($blog_post_id, $data);
-
-                //redirect to blog page
-                header('Location: blog.php?action=updated');
-                exit;
-
-            }catch(PDOException $e){
-                echo $e-> getMessage();
+            if($_POST['postTitle'] == ''){
+                $error[] = 'Please enter the title.';
             }
-        }
+            if($_POST['postCont'] == ''){
+                $error[] = 'Please enter the content.';
+            }
+            if(!isset($error)) {
+                try{
+                    $data = array('post_title' => $_POST['postTitle'], 'post_content' => $_POST['postCont'], 'timestamp' => date('Y-m-d H:i:s'));
+                    $b->updatePost($blog_post_id, $data);
+
+                    //redirect to blog page
+                    header('Location: blog.php?action=updated');
+                    exit;
+
+                }catch(PDOException $e){
+                    echo $e-> getMessage();
+                }
+            }
+            if(isset($error)){
+                foreach($error as $error){
+                    echo '<div class="alert alert-danger">'.$error.'</div>';
+                }
+            }
         }
 
         ?>
@@ -83,7 +88,7 @@ $b = $blog->find($blog_post_id);
             <p><label>Content</label><br />
                 <textarea name='postCont' cols='60' rows='10'><?php echo $b->post_content;?></textarea></p>
 
-            <p><input type='submit' name='submit' value='Update'></p>
+            <p><input class="btn btn-primary" type = "submit" name='submit' value='Update'</p>
 
         </form>
 

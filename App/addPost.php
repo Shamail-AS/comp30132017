@@ -65,7 +65,7 @@ $blog = new Blog_post();
         }
         if(!isset($error)){
             try{
-                $blog->users = $user->id;
+                $blog->user_id = $user->id;
                 $blog->post_title = $_POST['postTitle'];
                 $blog->post_content = $_POST['postCont'];
                 $blog->timestamp =  date('Y-m-d H:i:s');
@@ -81,7 +81,7 @@ $blog = new Blog_post();
 
         if(isset($error)){
             foreach($error as $error){
-                echo '<p class="error">'.$error.'</p>';
+                echo '<div class="alert alert-danger">'.$error.'</div>';
             }
         }
 
@@ -93,7 +93,7 @@ $blog = new Blog_post();
             <input type='text' name ='postTitle' value='<?php if(isset($error)){echo $_POST['postTitle'];}?>'></p>
         <p><label>Content</label><br />
             <textarea name ='postCont' cols ='60' rows='10'><?php if(isset($error)){echo $_POST['postCont'];}?></textarea></p>
-        <p><input type='submit' name='submit' value='Submit'</p>
+        <p><input class="btn btn-primary" type = "submit" name='submit' value='Submit'</p>
     </form>
 </div>
 

@@ -56,7 +56,7 @@ if ($user->id != $b->user_id) {
 
 <body>
     <?php include('common/nav.php') ?>
-    <div id = "wrapper">
+    <div class = "container">
         <h1>Blog</h1>
         <hr />
 
@@ -64,6 +64,7 @@ if ($user->id != $b->user_id) {
             echo '<div>';
                 echo'<h1>'. $b->post_title . '</h1>';
                 echo '<p> Posted on '.date('jS M Y', strtotime($b->timestamp)).'</p>';
+                echo '<br>';
                 echo '<p>' .$b->post_content. '</p>';
             echo '</div>';
 

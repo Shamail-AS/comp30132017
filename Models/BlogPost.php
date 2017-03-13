@@ -20,7 +20,8 @@ class Blog_post extends Model
     }
 
     public function deletePost($id) {
-        return $this->delete($this->table,$id);
+        $clause = "id=$id";
+        return $this->deleteWhere($this->table,$clause);
 
     }
 
