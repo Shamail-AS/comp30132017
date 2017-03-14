@@ -123,6 +123,7 @@ class User extends Model
         if($this->pic == null) return $image;
 
         $i = $image->find(($this->pic));
+        if ($i == null) return $image;
         return $i;
     }
 

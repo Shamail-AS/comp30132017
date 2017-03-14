@@ -48,8 +48,7 @@ $blogs = $blog->getByUser($view_user->id);
 if(isset($_GET['delpost'])){
 
     $blog->deletePost($_GET['delpost']);
-
-    header('Location: blog.php?action=deleted');
+    $session->redirect("blog.php?action=deleted");
     exit;
 }
 ?>
@@ -70,7 +69,7 @@ if(isset($_GET['delpost'])){
     <div class = "container">
         <?php if (!$canView) { ?>
             <div class="alert alert-danger">You can't view the blog because you two aren't Friend!!! Add as a friend through
-                <a href="sendInvite.php">HERE</a></div>
+                <a href="sendInvite.php?<?php echo 'user=' . $view_user->id ?>">HERE</a></div>
             <?php exit();
         } ?>
 

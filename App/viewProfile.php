@@ -28,14 +28,16 @@ $isViewingOwn = true;
 $canView = true;
 
 if (isset($_GET['user']) && !empty($_GET)) {
-    $view_user = $u->find($_GET['user']);
-    $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
-    if ($_GET['user'] == $logged_user->id) {
-        $canView = 1;
-    };
-    $isViewingOwn = false;
-    $friendship = new Friendship();
-    $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
+    if ($_GET['user'] != $logged_user->id) {
+        $view_user = $u->find($_GET['user']);
+        $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
+        if ($_GET['user'] == $logged_user->id) {
+            $canView = 1;
+        };
+        $isViewingOwn = false;
+        $friendship = new Friendship();
+        $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
+    }
 }
 
 $data = $view_user->getAllData();
@@ -68,10 +70,9 @@ if (isset($_GET['import'])){
         if(strpos($node->nodeName,'#text') > -1) continue;
         if(strlen($node->nodeValue) < 1) continue;
         if(!array_key_exists( $node->nodeName,$userData )) continue;
-        #echo($node->nodeName."<br>");
+
         $view_user->set($node->nodeName, $node->nodeValue);
     }
-    #var_dump($updatedUser->getAllData());
     $view_user->save();
 }
 
