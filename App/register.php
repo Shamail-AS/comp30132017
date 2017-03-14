@@ -44,7 +44,7 @@ if (isset($_POST) && !empty($_POST)) {
         $user->search_privacy = $pub_privacy;
         $user->profile_privacy = $pub_privacy;
         $user->connection_privacy = $pub_privacy;
-        $user->circle_privacy = $privacy->getIdByName('Friends Of Friends');;
+        $user->circle_privacy = $privacy->getIdByName('Friends Of Friend');;
         if ($user->isRegistered()) {
             $session->addError('registration', 'You are already registered');
             $session->redirect('register');

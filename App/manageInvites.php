@@ -24,7 +24,7 @@ if (isset($_GET) && !empty($_GET)) {
     $invite = $inv->find($id);
     $invite->act($action);
     $session->flash("The invite was $action" . 'ed');
-    $session->redirect('manageInvites');
+    $invites = $user->invites();
 }
 ?>
 
