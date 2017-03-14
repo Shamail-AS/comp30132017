@@ -140,9 +140,16 @@ class SessionManager
     {
         $user = $this->user;
         if (!isset($user) || empty($user) || is_null($user)) {
-            //$this->dd("Only logged in users are allowed from this point onwards");
             $this->flash("Only logged in users are allowed from this point onwards");
             $this->redirect('login');
+        }
+    }
+
+    public function onlyAdmin()
+    {
+        $user = $this->user;
+        if ($user->usertype != "ADMIN") {
+            $this->redirect('home');
         }
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+  <component name="DataSourceManagerImpl" format="xml" hash="583890431">
     <data-source source="LOCAL" name="acsm_297da127cca3bea@eu-cdbr-azure-west-d.cloudapp.net" uuid="d3fb7e92-f185-49a9-a341-05251f8ca243">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
