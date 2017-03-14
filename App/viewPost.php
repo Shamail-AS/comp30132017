@@ -56,20 +56,19 @@ if ($user->id != $b->user_id) {
 
 <body>
     <?php include('common/nav.php') ?>
-    <div id = "wrapper">
-        <h1>Blog</h1>
-        <hr />
-
+    <div class = "container">
         <?php
             echo '<div>';
                 echo'<h1>'. $b->post_title . '</h1>';
+                echo '<hr>';
                 echo '<p> Posted on '.date('jS M Y', strtotime($b->timestamp)).'</p>';
+                echo '<br>';
                 echo '<p>' .$b->post_content. '</p>';
             echo '</div>';
-
+            echo '<br>'
         ?>
-        <?php if ($isViewingOwn) { ?> <a href="editPost.php?id=<?php echo $b->id;?>">Edit</a><?php } ?>
-        <?php if ($isViewingOwn) { ?> <a href="javascript:delpost('<?php echo $b->id;?>','<?php echo $b->post_title;?>')">Delete</a><?php } ?>
+        <?php if ($isViewingOwn) { ?> <a href="editPost.php?id=<?php echo $b->id;?>" class="btn btn-primary" type = "button">Edit</a><?php } ?>
+        <?php if ($isViewingOwn) { ?> <a href="javascript:delpost('<?php echo $b->id;?>','<?php echo $b->post_title;?>')" class="btn btn-danger" type = "button">Delete</a><?php } ?>
     </div>
 </body>
 </html>

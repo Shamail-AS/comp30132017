@@ -31,7 +31,7 @@ $view_user = $logged_user;
 $isViewingOwn = true;
 $canView = true;
 
-if (isset($_GET) && !empty($_GET)) {
+if (isset($_GET['user']) && !empty($_GET)) {
     $view_user = $u->find($_GET['user']);
     $f = new Friendship();
     if ($f->areFriends($view_user, $logged_user)) {
@@ -67,34 +67,37 @@ if(isset($_GET['delpost'])){
 <body>
     <?php include('common/nav.php') ?>
 
-    <?php if (!$canView) { ?>
-        <div class="alert alert-danger">You are not his friend!!!</div>
-        <?php exit();
-    } ?>
+    <div class = "container">
+        <?php if (!$canView) { ?>
+            <div class="alert alert-danger">You can't view the blog because you two aren't Friend!!! Add as a friend through
+                <a href="sendInvite.php">HERE</a></div>
+            <?php exit();
+        } ?>
 
-    <h1>Blog</h1>
-    <hr />
 
-    <?php
+        <h1>Blog</h1>
+        <hr />
 
-    if (!empty($blogs)) {
-        foreach ($blogs as $b) {
-
-            echo '<div>';
+        <?php if (!empty($blogs)) {
+            foreach ($blogs as $b) {
+                echo '<li class="list-group-item">';
+                echo '<div class = search-result>';
                 echo '<h1>'.$b->post_title.'</h1>';
                 echo '<p>Posted on '.date('jS M Y H:i:s', strtotime($b->timestamp)).'</p>';
                 echo '<p><a href = "viewPost.php?id= '.$b->id.'">Read More</a></p>';
-            echo '</div>';
+                echo '</div>';
+                echo'</li>';
+            }
+        }else {
+            echo "No Blog Post";
+        }?>
 
-        }
-    }else {
-        echo "No Blog Post";
-    }
+        <br>
+        <?php if ($isViewingOwn) { ?> <a href="searchBlog.php" class="btn btn-primary" type = "button">Search Blog</a><?php } ?>
+        <?php if ($isViewingOwn) { ?> <a href="addPost.php" class="btn btn-primary" type = "button">Add Post</a><?php } ?>
 
+    </div>
 
-    ?>
-    <?php if ($isViewingOwn) { ?> <h4><a href="searchBlog.php">Search Blog</a></h4><?php } ?>
-    <?php if ($isViewingOwn) { ?> <h4><a href="addPost.php">Add Post</a></h4><?php } ?>
 
 
 </body>

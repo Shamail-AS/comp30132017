@@ -17,14 +17,14 @@ $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 
-$user = $session->user;
+$user = new User($session->user->getAllData());
 $data = $user->getAllData();
 
 $updateUser = new User();
 $u = $updateUser->find($user->id);
 $userData = $u->getAllData();
 
-pr($userData);
+pr($user);
 
 if (isset($_GET['export'])) {
     @date_default_timezone_set("GMT");
@@ -76,12 +76,12 @@ function pr($data)
     <title>Export</title>
     <script language="JavaScript" type="text/javascript">
         function exporting() {
-            window.location.href = 'data.php';
+            window.location.href = 'data.php?export';
             alert("Exported to xml_file folder");
 
         }
         function importing() {
-            window.location.href = 'data.php';
+            window.location.href = 'data.php?import';
             alert("Import from xml_file folder");
 
         }
