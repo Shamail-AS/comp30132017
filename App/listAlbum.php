@@ -89,7 +89,7 @@ function pr($data)
     </div>
     <p>
         <?php
-        $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
+        $thumbnail = "https://comp3013blob.blob.core.windows.net/mycontainer/folder-icon-512x512.png";
         if (!empty($albums)) {
             foreach ($albums as $a) {
                 echo "                <li class=\"photo-box\">
