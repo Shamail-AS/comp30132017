@@ -31,6 +31,9 @@ $canView = true;
 if (isset($_GET['user']) && !empty($_GET)) {
     $view_user = $u->find($_GET['user']);
     $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
+    if ($_GET['user'] == $logged_user->id) {
+        $canView = 1;
+    }
     $isViewingOwn = false;
     $friendship = new Friendship();
     $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
