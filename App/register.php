@@ -8,15 +8,18 @@
 require_once('../Core/SessionManager.php');
 require_once('../Models/User.php');
 require_once('../Models/Album.php');
+require_once('../Models/Privacy.php');
 require_once('../Core/Validator.php');
 
 use Database\Models\Album;
 use Database\Models\User;
 use Http\Forms\Validator;
+use Database\Models\Privacy;
 use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
+$privacy = new Privacy();
 if (isset($_POST) && !empty($_POST)) {
 
     $validator = new Validator();
@@ -50,7 +53,7 @@ if (isset($_POST) && !empty($_POST)) {
                 $album = new Album();
                 $album->name = 'Profile pictures';
                 $album->user_id = $user->id;
-                $album->privacy_level = $privacy->getIdByName(($_POST['Public']));
+                $album->privacy_level = $privacy->getIdByName('Public');
                 $album->save();
 
 
