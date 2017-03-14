@@ -40,31 +40,36 @@ if ($user == null) {
             </li>
             <li class="nav-item">
                 <?php
-                if ($user != null) {
-                    $url = "listAlbum.php?user=" . $user->id;
-                    echo "<li class=\"nav-item\"><a class=\"nav-link\" href= " . $url . ">My Album</a></li>";
-                }
-                ?>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="logout.php">Logout</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="searchUsers.php">Search</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="manageInvites.php">Requests</a>
-            </li>
-            <li class="nav-item">
-                <?php
-                if ($user != null) {
+                if ($user->name != "Guest") {
                     $url = "blog.php";
                     echo "<li class=\"nav-item\"><a class=\"nav-link\" href= " . $url . ">My Blog</a></li>";
                 }
                 ?>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="viewProfile.php"><?php echo $user->name ?></a>
+                <?php
+                if ($user->name != "Guest") {
+                    $url = "listAlbum.php?user=" . $user->id;
+                    echo "<li class=\"nav-item\"><a class=\"nav-link\" href= " . $url . ">My Album</a></li>";
+                }
+                ?>
+            </li>
+            <li class="nav-item">
+                <?php
+                if ($user->name != "Guest") {
+                    echo '<a class="nav-link" href = "logout.php" > Logout</a >';
+                }
+                else {
+                    echo '<a class="nav-link" href = "register.php" > Register</a >';
+                }
+                ?>
+                <?php
+                if ($user->name != "Guest") {
+                    echo '<li class="nav-item">
+                <a class="nav-link" href="searchUsers.php">Search</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="manageInvites.php">Requests</a>
             </li>
             </li>
             <li class="nav-item">
@@ -72,7 +77,10 @@ if ($user == null) {
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="uploadImage.php">Upload Image</a>
-            </li>
+            </li>';
+                }
+                ?>
+
             <?php
             if ($user != null && $user->usertype == "ADMIN") {
                 echo "<li class=\"nav-item\">";
@@ -80,6 +88,10 @@ if ($user == null) {
                 echo "</li>";
             }
             ?>
+            <li class="nav-item">
+                <a class="nav-link " href="viewProfile.php"><?php echo $user->name ?></a>
+            </li>
+            </li>
         </ul>
         <!--        <form class="form-inline mt-2 mt-md-0">-->
         <!--            <input class="form-control mr-sm-2" type="text" placeholder="Search">-->
