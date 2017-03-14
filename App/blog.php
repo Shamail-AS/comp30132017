@@ -69,7 +69,7 @@ if(isset($_GET['delpost'])){
 
     <div class = "container">
         <?php if (!$canView) { ?>
-            <div class="alert alert-danger">You are not his Friend!!! Add him as a friend through
+            <div class="alert alert-danger">You can't view the blog because you two aren't Friend!!! Add as a friend through
                 <a href="sendInvite.php">HERE</a></div>
             <?php exit();
         } ?>

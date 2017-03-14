@@ -57,7 +57,7 @@ if (isset($_GET['export'])) {
 
 if (isset($_GET['import'])){
     $reader = new XMLReader();
-    if (!$reader->open('xml_file/data.xml')) {
+    if (!$reader->open('data.xml')) {
         die("Failed to open data.xml");
     }
 
@@ -88,12 +88,12 @@ if (isset($_GET['import'])){
     <script language="JavaScript" type="text/javascript">
         function exporting() {
             window.location.href = 'viewProfile.php?export';
-            alert("Exported to xml_file folder");
+            alert("Exported to data.xml");
 
         }
         function importing() {
             window.location.href = 'viewProfile.php?import';
-            alert("Import from xml_file folder");
+            alert("Import from data.xml");
 
         }
     </script>
