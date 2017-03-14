@@ -38,11 +38,13 @@ $canView = PrivacyManager::canViewAlbum($user, $a);
 if ($user->id == $a->user_id){
     $canView = 1;
 }
-foreach ($mycircles as $c) {
-    $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
-    foreach ($sharedAlbums as $s) {
-        if ($s->id == $album_id)
-            $canView = 1;
+if (count($mycircles) > 0) {
+    foreach ($mycircles as $c) {
+        $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+        foreach ($sharedAlbums as $s) {
+            if ($s->id == $album_id)
+                $canView = 1;
+        }
     }
 }
 
