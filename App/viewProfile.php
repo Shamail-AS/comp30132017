@@ -15,6 +15,12 @@ use Database\Models\Friendship;
 use Database\Models\User;
 use Http\Session\SessionManager;
 
+function pr($data)
+{
+    echo "<pre>";
+    print_r($data); // or var_dump($data);
+    echo "</pre>";
+}
 
 $session = new SessionManager();
 
@@ -33,7 +39,7 @@ if (isset($_GET['user']) && !empty($_GET)) {
     $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
     if ($_GET['user'] == $logged_user->id) {
         $canView = 1;
-    }
+    };
     $isViewingOwn = false;
     $friendship = new Friendship();
     $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
@@ -160,17 +166,20 @@ if (isset($_GET['import'])){
     <h1>Friends</h1>
     <hr>
 
-    <?php foreach ($view_user->getFriends() as $friend) {
-        if ($friend->id == $session->user->id) continue; ?>
+    <?php foreach ($view_user->getFriends() as $friend) {?>
         <li class="list-group-item">
             <div class="search-result">
                 <a href="viewProfile.php?user=<?php echo $friend->id ?>"><p><?php echo $friend->name ?></p></a>
                 <p><?php echo $friend->email ?></p>
                 <?php if (PrivacyManager::canSendConnectionRequests($friend, $session->user)) { ?>
                     <?php if (!$user->hasContacted($friend)) { ?>
+                        <?php if (!$user->isFriendsWith($friend)) { ?>
+                            <?php if ($view_user->id != $user->id) { ?>
                         <a href="sendInvite.php?user=<?php echo $friend->id ?>" class="btn btn-primary"
                            type="button">Send
                             request</a>
+                            <?php } ?>
+                        <?php } ?>
                     <?php } else {
                         echo "A connection request already exists";
                         ?>

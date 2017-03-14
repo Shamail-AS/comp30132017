@@ -40,6 +40,10 @@ if (isset($_POST) && !empty($_POST)) {
         $user->password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $user->email = $_POST['email'];
         $user->name = $_POST['name'];
+        $user->search_privacy = $privacy->getIdByName('Public');
+        $user->profile_privacy = $privacy->getIdByName('Public');
+        $user->connection_privacy = $privacy->getIdByName('Public');
+        $user->circle_privacy = 3;
         if ($user->isRegistered()) {
             $session->addError('registration', 'You are already registered');
             $session->redirect('register');

@@ -18,12 +18,7 @@ use Database\Models\Image;
 use Database\Models\User;
 use Http\Forms\Validator;
 use Http\Session\SessionManager;
-function pr($data)
-{
-    echo "<pre>";
-    print_r($data); // or var_dump($data);
-    echo "</pre>";
-}
+
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
