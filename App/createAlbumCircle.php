@@ -100,7 +100,6 @@ if (isset($_POST) && !empty($_POST)) {
             <div class="form-group">
                 <label>Privacy Level</label>
                 <select name="plevel" id="plevel" class="form-control" title="Select">
-                    <option>Privacy Level</option>
                     <?php
                     foreach ($optList as $opt)
                     {
