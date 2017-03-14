@@ -18,7 +18,12 @@ use Database\Models\Image;
 use Database\Models\User;
 use Http\Forms\Validator;
 use Http\Session\SessionManager;
-
+function pr($data)
+{
+    echo "<pre>";
+    print_r($data); // or var_dump($data);
+    echo "</pre>";
+}
 $session = new SessionManager();
 $session->start();
 $session->blockGuest();
@@ -27,8 +32,7 @@ $user = new User($session->user->getAllData());
 if(isset($_POST) && !empty($_POST)){
 
     $validator = new Validator();
-
-    if(isset($_FILES)){
+    if(!empty($_FILES["profile_pic"]["tmp_name"])){
         $errors = $validator->validateImage($_FILES);
         if(count($errors) > 0 ){
             foreach ( $errors as $e=>$message){
@@ -74,7 +78,6 @@ if(isset($_POST) && !empty($_POST)){
             $session->redirect('editProfile');
         }
         else{
-
             $user->name = $_POST['name'];
             $user->email = $_POST['email'];
             $user->sex = $_POST['sex'];
