@@ -126,10 +126,10 @@ class User extends Model
         return $i;
     }
 
-    public function proifilePicAlbum(){
-        $album = new Album();
-        $results = $album->where(null,"name = 'Profile pictures'");
-        if(empty($results)){
+    public function profilePicAlbum(){
+        $sql = "SELECT * FROM albums WHERE name = 'Profile pictures' AND user_id = '161'";
+        $result = parent::raw($sql);
+        if(empty($result)){
             $album = new Album();
             $album->name = 'Profile pictures';
             $album->user_id = $this->id;
@@ -138,7 +138,7 @@ class User extends Model
             return $album;
         }
         else{
-            return $results[0];
+            return $result[0];
         }
 
     }

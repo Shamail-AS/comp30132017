@@ -60,7 +60,7 @@ if (isset($_POST) && !empty($_POST)) {
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Fixed top navbar example for Bootstrap</title>
+    <title>Login</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">

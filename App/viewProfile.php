@@ -15,13 +15,6 @@ use Database\Models\Friendship;
 use Database\Models\User;
 use Http\Session\SessionManager;
 
-function pr($data)
-{
-    echo "<pre>";
-    print_r($data); // or var_dump($data);
-    echo "</pre>";
-}
-
 $session = new SessionManager();
 
 

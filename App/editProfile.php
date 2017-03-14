@@ -23,6 +23,7 @@ $session = new SessionManager();
 $session->start();
 $session->blockGuest();
 
+$u = $session->user;
 $user = new User($session->user->getAllData());
 if(isset($_POST) && !empty($_POST)){
 
@@ -46,7 +47,7 @@ if(isset($_POST) && !empty($_POST)){
         $image = new Image();
         $image->name = $_POST['title'];
         $image->description = $_POST['desc'] ?? '';
-        $image->album_id = intval($user->proifilePicAlbum()->id);
+        $image->album_id = intval($user->profilePicAlbum()->id);
 
 
         $result = $fileManager->upload($image->name.'.'.$ext,$content);
@@ -101,7 +102,7 @@ if(isset($_POST) && !empty($_POST)){
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Fixed top navbar example for Bootstrap</title>
+    <title>Edit your profile</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">

@@ -38,7 +38,7 @@ if (isset($_GET) && !empty($_GET)) {
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Fixed top navbar example for Bootstrap</title>
+    <title>Manage invitations</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
