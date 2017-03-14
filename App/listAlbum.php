@@ -121,13 +121,14 @@ function pr($data)
             $sharedAlbum = new Album();
             $circles = new Circles_Member();
             $mycircles = $circles->getByUser($user->id);
-            foreach ($mycircles as $c) {
-                //if ($c->user != $user_id) {
-                $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
-                foreach ($sharedAlbums as $s) {
-                    if ($s->user_id != $user_id) {
-                        $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
-                        echo "                <li class=\"photo-box\">
+            if (count($mycircles) > 0) {
+                foreach ($mycircles as $c) {
+                    //if ($c->user != $user_id) {
+                    $sharedAlbums = $sharedAlbum->getAlbumByCircleID($c->circle);
+                    foreach ($sharedAlbums as $s) {
+                        if ($s->user_id != $user_id) {
+                            $thumbnail = "http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png";
+                            echo "                <li class=\"photo-box\">
                     <div class=\"image-wrap\">
                         <img src=" . $thumbnail . ">
                     </div>
@@ -135,8 +136,12 @@ function pr($data)
                         <h5><a href=\"viewAlbum.php?id=" . $s->id . "\">" . $s->name . "</a></h5>
                     </div>
                     </li>";
+                        }
                     }
                 }
+            }
+            else {
+                echo "You are not in any circle";
             }
         }
         ?>
