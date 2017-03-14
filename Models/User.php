@@ -127,7 +127,7 @@ class User extends Model
     }
 
     public function profilePicAlbum(){
-        $sql = "SELECT * FROM albums WHERE name = 'Profile pictures' AND user_id = '161'";
+        $sql = "SELECT * FROM albums WHERE name = 'Profile pictures' AND user_id = '$this->id'";
         $result = parent::raw($sql);
         if(empty($result)){
             $album = new Album();
