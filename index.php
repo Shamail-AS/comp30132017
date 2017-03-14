@@ -1,1 +1,10 @@
-<?php echo 'This is the home page when the directory is opened' ?>
+<?php
+/**
+ * Created by PhpStorm.
+ * User: tuanp
+ * Date: 14/03/2017
+ * Time: 14:17
+ */
+header('Location: /App/home.php');
+die();
+?>
