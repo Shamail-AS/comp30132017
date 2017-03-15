@@ -21,7 +21,6 @@ $session->blockGuest();
 $user_id = $_GET['id'];
 $user = new User();
 $u = $user->getUserById($user_id);
-$pr(u);
 $user = $session->user;
 if ($user->usertype != "ADMIN") {
     $session->redirect('home');
@@ -41,6 +40,7 @@ if (isset($_POST) && !empty($_POST)) {
     $session->redirect('editUser?id='.$user_id);
 
     } else {
+    if (array_key_exists('selSex', $_POST)) {
         $u->name = $_POST['name'];
         $u->email = $_POST['email'];
         if ($_POST['selSex'] == "Female") {
@@ -48,18 +48,19 @@ if (isset($_POST) && !empty($_POST)) {
         } elseif ($_POST['selSex'] == "Male") {
             $u->sex = "M";
 
-        if ($_POST['selUserType'] == "ADMIN") {
-            $u->usertype = "ADMIN";
-        } elseif ($_POST['selUserType'] == "USER") {
-            $u->usertype = "USER";
-        }
+            if ($_POST['selUserType'] == "ADMIN") {
+                $u->usertype = "ADMIN";
+            } elseif ($_POST['selUserType'] == "USER") {
+                $u->usertype = "USER";
+            }
 
-        $u->birthplace = $_POST['birthplace'];
-        $u->work = $_POST['work'];
-        $u->school = $_POST['school'];
-        $u->dob = $_POST['dob'];
-        $u->university = $_POST['university'];
-        $u->save();
+            $u->birthplace = $_POST['birthplace'];
+            $u->work = $_POST['work'];
+            $u->school = $_POST['school'];
+            $u->dob = $_POST['dob'];
+            $u->university = $_POST['university'];
+            $u->save();
+        }
     }
 }
 
