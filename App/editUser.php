@@ -26,21 +26,21 @@ if ($user->usertype != "ADMIN") {
     $session->redirect('home');
 }
 if (isset($_POST) && !empty($_POST)) {
-    $validator = new Validator();
-    $errors = $validator->validateUserAdminData($_POST);
-    if (count($errors) > 0) {
-        foreach ($errors as $key => $value) {
-            $session->addError($key, $value);
+    if (array_key_exists('selSex', $_POST)) {
+        $validator = new Validator();
+        $errors = $validator->validateUserAdminData($_POST);
+        if (count($errors) > 0) {
+            foreach ($errors as $key => $value) {
+                $session->addError($key, $value);
+            }
         }
-    }
-}
     //var_dump($session->errors());
     if ($session->hasErrors()) {
-    //add redirection back to form
-    $session->redirect('editUser?id='.$user_id);
+        //add redirection back to form
+        $session->redirect('editUser?id=' . $user_id);
 
     } else {
-    if (array_key_exists('selSex', $_POST)) {
+
         $u->name = $_POST['name'];
         $u->email = $_POST['email'];
         if ($_POST['selSex'] == "Female") {
@@ -61,6 +61,7 @@ if (isset($_POST) && !empty($_POST)) {
             $u->university = $_POST['university'];
             $u->save();
         }
+    }
     }
 }
 
