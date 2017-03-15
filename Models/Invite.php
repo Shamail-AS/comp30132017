@@ -52,6 +52,7 @@ class Invite extends Model
 
     public function cancel()
     {
+
         $this->status = 'canceled';
         $this->save();
     }
@@ -64,12 +65,15 @@ class Invite extends Model
 
     public function act($action)
     {
-        if (strpos($action, 'accept') >= 0) {
+        if ($action == 'accept') {
             $this->accept();
-        } else if (strpos($action, 'reject') >= 0) {
+            return;
+        } else if ($action == 'reject') {
             $this->reject();
-        } else if (strpos($action, 'cancel') >= 0) {
+            return;
+        } else if ($action == 'cancel') {
             $this->cancel();
+            return;
         }
     }
 

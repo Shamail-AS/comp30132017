@@ -32,8 +32,6 @@ if (isset($_POST) && !empty($_POST)) {
     $invite->message = $_POST['message'];
     $invite->status = 'pending';
     $invite->send();
-    //var_dump($_POST);
-    //var_dump($invite);
     $session->redirect('manageInvites');
 }
 

@@ -93,4 +93,33 @@ class Validator
        }
        return $errors;
     }
+
+    public function validateUserAdminData($post_data)
+    {
+        $errors = [];
+        $messages = [
+            'name' => 'Name is invalid',
+            'email' => 'Email is invalid',
+            'birthplace' => 'Birthplace is invalid',
+            'work' => 'Work is invalid',
+            'school' => 'School is invalid',
+            'sex' => 'Sex is invalid',
+            'dob' => 'Date of birth is invalid',
+            'university' => 'University is invalid',
+            'usertype' => 'User type is invalid'
+
+        ];
+        if (!($post_data['selSex'] == "Female" || $post_data['selSex'] == "Male")) {
+            $errors['sex'] = $messages['sex'];
+        }
+        if (!($post_data['selUserType'] == "ADMIN" || $post_data['selUserType'] == "USER")) {
+            $errors['usertype'] = $messages['usertype'];
+        }
+        foreach ($post_data as $key => $value) {
+            if (!filter_var(filter_var($post_data[$key], FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL)) {
+                $errors[$key] = $messages[$key];
+            }
+        }
+        return $errors;
+    }
 }

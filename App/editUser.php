@@ -24,21 +24,22 @@ $u = $user->getUserById($user_id);
 $pr(u);
 $user = $session->user;
 if ($user->usertype != "ADMIN") {
-    $session->redirect(home);
+    $session->redirect('home');
 }
 if (isset($_POST) && !empty($_POST)) {
     $validator = new Validator();
-    $errors = $validator->validateUserRegistrationData($_POST);
+    $errors = $validator->validateUserAdminData($_POST);
     if (count($errors) > 0) {
-    foreach ($errors as $key => $value) {
-        $session->addError($key, $value);
+        foreach ($errors as $key => $value) {
+            $session->addError($key, $value);
+        }
     }
 }
     //var_dump($session->errors());
     if ($session->hasErrors()) {
     //add redirection back to form
     $session->redirect('editUser?id='.$user_id);
-    //var_dump($session->errors());
+
     } else {
         $u->name = $_POST['name'];
         $u->email = $_POST['email'];
@@ -46,18 +47,11 @@ if (isset($_POST) && !empty($_POST)) {
             $u->sex = "F";
         } elseif ($_POST['selSex'] == "Male") {
             $u->sex = "M";
-        } else {
-            $session->addError('sex', 'Invalid Gender');
-            $session->redirect('editUser?id='.$user_id);
-        }
 
         if ($_POST['selUserType'] == "ADMIN") {
             $u->usertype = "ADMIN";
         } elseif ($_POST['selUserType'] == "USER") {
             $u->usertype = "USER";
-        } else {
-            $session->addError('usertype', 'Invalid User Type');
-            $session->redirect('editUser?id='.$user_id);
         }
 
         $u->birthplace = $_POST['birthplace'];
@@ -109,9 +103,10 @@ function pr($data)
     </div>
     <div>
         <?php
-            $action = "editUser.php?id="  .$user_id;
-            echo "<form action=". $action." method=\"post\" enctype=\"multipart/form-data\">";
+        //$action = "editUser.php?id="  .$user_id;
+        //echo "<form action=". $action." method=\"post\" enctype=\"multipart/form-data\">";
         ?>
+        <form action="<?php echo "editUser.php?id=$user_id" ?>" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <div>
                     <label>Name</label>

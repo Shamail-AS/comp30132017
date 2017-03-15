@@ -19,7 +19,6 @@ use Http\Session\SessionManager;
 
 $session = new SessionManager();
 $session->start();
-$privacy = new Privacy();
 if (isset($_POST) && !empty($_POST)) {
 
     $validator = new Validator();
@@ -35,15 +34,17 @@ if (isset($_POST) && !empty($_POST)) {
         $session->redirect('register');
         //var_dump($session->errors());
     } else {
+        $privacy = new Privacy();
+        $pub_privacy = $privacy->getIdByName('Public');
         $user = new User();
         $user->username = $_POST['username'];
         $user->password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $user->email = $_POST['email'];
         $user->name = $_POST['name'];
-        $user->search_privacy = $privacy->getIdByName('Public');
-        $user->profile_privacy = $privacy->getIdByName('Public');
-        $user->connection_privacy = $privacy->getIdByName('Public');
-        $user->circle_privacy = 3;
+        $user->search_privacy = $pub_privacy;
+        $user->profile_privacy = $pub_privacy;
+        $user->connection_privacy = $pub_privacy;
+        $user->circle_privacy = $privacy->getIdByName('Friends Of Friend');;
         if ($user->isRegistered()) {
             $session->addError('registration', 'You are already registered');
             $session->redirect('register');
@@ -57,7 +58,7 @@ if (isset($_POST) && !empty($_POST)) {
                 $album = new Album();
                 $album->name = 'Profile pictures';
                 $album->user_id = $user->id;
-                $album->privacy_level = $privacy->getIdByName('Public');
+                $album->privacy_level = $pub_privacy;
                 $album->save();
 
 

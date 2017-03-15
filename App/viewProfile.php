@@ -28,14 +28,16 @@ $isViewingOwn = true;
 $canView = true;
 
 if (isset($_GET['user']) && !empty($_GET)) {
-    $view_user = $u->find($_GET['user']);
-    $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
-    if ($_GET['user'] == $logged_user->id) {
-        $canView = 1;
-    };
-    $isViewingOwn = false;
-    $friendship = new Friendship();
-    $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
+    if ($_GET['user'] != $logged_user->id) {
+        $view_user = $u->find($_GET['user']);
+        $canView = PrivacyManager::canViewProfile($view_user, $logged_user);
+        if ($_GET['user'] == $logged_user->id) {
+            $canView = 1;
+        };
+        $isViewingOwn = false;
+        $friendship = new Friendship();
+        $view_user->similarity = $friendship->getSimilarity($logged_user, $view_user);
+    }
 }
 
 $data = $view_user->getAllData();
@@ -68,10 +70,9 @@ if (isset($_GET['import'])){
         if(strpos($node->nodeName,'#text') > -1) continue;
         if(strlen($node->nodeValue) < 1) continue;
         if(!array_key_exists( $node->nodeName,$userData )) continue;
-        #echo($node->nodeName."<br>");
+
         $view_user->set($node->nodeName, $node->nodeValue);
     }
-    #var_dump($updatedUser->getAllData());
     $view_user->save();
 }
 
@@ -159,28 +160,12 @@ if (isset($_GET['import'])){
     <h1>Friends</h1>
     <hr>
 
-    <?php foreach ($view_user->getFriends() as $friend) {?>
+    <?php foreach ($view_user->getFriends() as $friend) {
+        if ($friend->id == $session->user->id) continue; ?>
         <li class="list-group-item">
             <div class="search-result">
                 <a href="viewProfile.php?user=<?php echo $friend->id ?>"><p><?php echo $friend->name ?></p></a>
                 <p><?php echo $friend->email ?></p>
-                <?php if (PrivacyManager::canSendConnectionRequests($friend, $session->user)) { ?>
-                    <?php if (!$user->hasContacted($friend)) { ?>
-                        <?php if (!$user->isFriendsWith($friend)) { ?>
-                            <?php if ($view_user->id != $user->id) { ?>
-                        <a href="sendInvite.php?user=<?php echo $friend->id ?>" class="btn btn-primary"
-                           type="button">Send
-                            request</a>
-                            <?php } ?>
-                        <?php } ?>
-                    <?php } else {
-                        echo "A connection request already exists";
-                        ?>
-                        <a href="manageInvites.php" class="btn btn-default" type="button">Requests</a>
-                    <?php }
-                } else {
-                    echo "Can't send connection request due to privacy settings";
-                } ?>
             </div>
         </li>
         <br>
