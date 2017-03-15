@@ -27,9 +27,10 @@ if ($user->usertype != "ADMIN") {
 }
 if (isset($_POST) && !empty($_POST)) {
     if (array_key_exists('selSex', $_POST)) {
+        pr($_POST);
         $validator = new Validator();
         $errors = $validator->validateUserAdminData($_POST);
-        if (count($errors) > 0) {
+        if (count($errors) < 0) {
             foreach ($errors as $key => $value) {
                 $session->addError($key, $value);
             }
