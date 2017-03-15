@@ -21,6 +21,7 @@ $session->blockGuest();
 $user_id = $_GET['id'];
 $user = new User();
 $u = $user->getUserById($user_id);
+$pr(u);
 $user = $session->user;
 if ($user->usertype != "ADMIN") {
     $session->redirect(home);
@@ -92,7 +93,10 @@ function pr($data)
 
     <!-- Bootstrap core CSS -->
     <link href="../Resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
+
 </head>
 
 <body>
@@ -218,6 +222,7 @@ function pr($data)
 </div>
 <script>
     $(document).ready(function() {
+        console.log(<?php echo json_encode($u); ?>);
         $('#name').val(<?php echo json_encode($u->name); ?>);
         $('#email').val(<?php echo json_encode($u->email); ?>);
 
